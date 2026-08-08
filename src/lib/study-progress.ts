@@ -11,6 +11,7 @@ export interface StudyProgress {
   understood: TopicId[];
   bookmarks: TopicId[];
   review: TopicId[];
+  recentlyStudied: TopicId[];
   notes: Partial<Record<TopicId, string>>;
   quizzes: Partial<Record<TopicId, QuizProgress>>;
 }
@@ -19,11 +20,13 @@ export const EMPTY_PROGRESS: StudyProgress = {
   understood: [],
   bookmarks: [],
   review: [],
+  recentlyStudied: [],
   notes: {},
   quizzes: {},
 };
 
 const STORAGE_KEY = 'algo-atlas-study-progress-v2';
+const RECENT_TOPIC_LIMIT = 5;
 
 function isTopicId(value: unknown): value is TopicId {
   return typeof value === 'string' && value.length > 0;
@@ -39,6 +42,7 @@ export function readProgress(): StudyProgress {
       understood: Array.isArray(parsed.understood) ? parsed.understood.filter(isTopicId) : [],
       bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks.filter(isTopicId) : [],
       review: Array.isArray(parsed.review) ? parsed.review.filter(isTopicId) : [],
+      recentlyStudied: Array.isArray(parsed.recentlyStudied) ? parsed.recentlyStudied.filter(isTopicId).slice(0, RECENT_TOPIC_LIMIT) : [],
       notes: parsed.notes ?? {},
       quizzes: parsed.quizzes ?? {},
     };
@@ -58,4 +62,33 @@ export function writeProgress(progress: StudyProgress): void {
 
 export function toggleTopic(values: TopicId[], id: TopicId): TopicId[] {
   return values.includes(id) ? values.filter((value) => value !== id) : [...values, id];
+}
+
+export function touchTopic(progress: StudyProgress, id: TopicId): StudyProgress {
+  return {
+    ...progress,
+    recentlyStudied: [id, ...progress.recentlyStudied.filter((value) => value !== id)].slice(0, RECENT_TOPIC_LIMIT),
+  };
+}
+
+export interface StudyMetrics {
+  completionPercentage: number;
+  reviewPercentage: number;
+  understoodCount: number;
+  reviewCount: number;
+  bookmarkCount: number;
+  notedCount: number;
+}
+
+export function getStudyMetrics(progress: StudyProgress, total: number): StudyMetrics {
+  const percentage = (count: number) => (total ? Math.round((count / total) * 100) : 0);
+
+  return {
+    completionPercentage: percentage(progress.understood.length),
+    reviewPercentage: percentage(progress.review.length),
+    understoodCount: progress.understood.length,
+    reviewCount: progress.review.length,
+    bookmarkCount: progress.bookmarks.length,
+    notedCount: Object.values(progress.notes).filter((note) => Boolean(note?.trim())).length,
+  };
 }

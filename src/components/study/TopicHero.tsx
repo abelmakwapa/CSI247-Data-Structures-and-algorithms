@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import type { TopicId } from '@/lib/topics';
 import { getTopic } from '@/lib/topics';
 import { notifyProgress, ProgressTracker } from './ProgressTracker';
-import { EMPTY_PROGRESS, readProgress, toggleTopic, writeProgress, type StudyProgress } from '@/lib/study-progress';
+import { EMPTY_PROGRESS, readProgress, toggleTopic, touchTopic, writeProgress, type StudyProgress } from '@/lib/study-progress';
 import { StudyToolbar } from './StudyToolbar';
 
 export function TopicHero({ topicId, total }: { topicId: TopicId; total: number }) {
@@ -16,8 +16,12 @@ export function TopicHero({ topicId, total }: { topicId: TopicId; total: number 
     const sync = () => setProgress(readProgress());
     sync();
     window.addEventListener('algo-atlas-progress', sync);
+    const current = readProgress();
+    const next = touchTopic(current, topicId);
+    writeProgress(next);
+    notifyProgress();
     return () => window.removeEventListener('algo-atlas-progress', sync);
-  }, []);
+  }, [topicId]);
 
   function update(next: StudyProgress) {
     setProgress(next);
