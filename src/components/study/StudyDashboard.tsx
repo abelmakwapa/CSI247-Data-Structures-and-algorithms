@@ -7,6 +7,7 @@ import { topics, topicMap, topicUrl, type TopicMetadata } from '@/lib/topics';
 import { PROGRESS_EVENT } from './ProgressTracker';
 import { StudyStatCard } from './StudyStatCard';
 import { StudyTopicList } from './StudyTopicList';
+import { ReviewSession } from './ReviewSession';
 
 const totalTopics = topics.length;
 
@@ -32,10 +33,10 @@ export function StudyDashboard() {
   const notedTopics = topics.filter((topic) => Boolean(currentProgress.notes[topic.id]?.trim()));
   const recentlyStudiedTopics = useMemo(() => getTopicsInOrder(currentProgress.recentlyStudied), [currentProgress.recentlyStudied]);
   const continueTopic = topics.find((topic) => !currentProgress.understood.includes(topic.id)) ?? topics[0];
-  const reviewTarget = reviewTopics[0] ?? continueTopic;
 
   return (
     <div className="study-dashboard">
+      <ReviewSession />
       <section className="study-dashboard-intro" aria-labelledby="study-dashboard-title">
         <div className="study-dashboard-intro-copy">
           <p className="eyebrow">Local study dashboard</p>
@@ -45,7 +46,7 @@ export function StudyDashboard() {
             <Link className="primary-link" href={topicUrl(continueTopic.id)}>
               Continue studying <span aria-hidden="true">→</span>
             </Link>
-            <Link className="secondary-link" href={topicUrl(reviewTarget.id)}>
+            <Link className="secondary-link" href="#review-session">
               Start review session <span aria-hidden="true">↺</span>
             </Link>
           </div>

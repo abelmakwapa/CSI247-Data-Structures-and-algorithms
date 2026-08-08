@@ -7,6 +7,29 @@ export interface QuizProgress {
   recallRatings: Record<number, 'got-it' | 'review'>;
 }
 
+export type ConfidenceRating = 1 | 2 | 3 | 4 | 5;
+export type ReviewOutcome = 'knew' | 'practice' | 'skipped';
+
+export interface ReviewHistoryEntry {
+  id: string;
+  topicId: TopicId;
+  outcome: ReviewOutcome;
+  confidence: ConfidenceRating;
+  reviewedAt: string;
+  nextReviewAt: string;
+}
+
+export interface TopicReviewState {
+  confidence?: ConfidenceRating;
+  lastReviewedAt?: string;
+  nextReviewAt?: string;
+}
+
+export interface ReviewProgress {
+  topics: Partial<Record<TopicId, TopicReviewState>>;
+  history: ReviewHistoryEntry[];
+}
+
 export interface StudyProgress {
   understood: TopicId[];
   bookmarks: TopicId[];
@@ -14,6 +37,7 @@ export interface StudyProgress {
   recentlyStudied: TopicId[];
   notes: Partial<Record<TopicId, string>>;
   quizzes: Partial<Record<TopicId, QuizProgress>>;
+  reviewProgress: ReviewProgress;
 }
 
 export const EMPTY_PROGRESS: StudyProgress = {
@@ -23,6 +47,7 @@ export const EMPTY_PROGRESS: StudyProgress = {
   recentlyStudied: [],
   notes: {},
   quizzes: {},
+  reviewProgress: { topics: {}, history: [] },
 };
 
 const STORAGE_KEY = 'algo-atlas-study-progress-v2';
@@ -45,10 +70,28 @@ export function readProgress(): StudyProgress {
       recentlyStudied: Array.isArray(parsed.recentlyStudied) ? parsed.recentlyStudied.filter(isTopicId).slice(0, RECENT_TOPIC_LIMIT) : [],
       notes: parsed.notes ?? {},
       quizzes: parsed.quizzes ?? {},
+      reviewProgress: normalizeReviewProgress(parsed.reviewProgress),
     };
   } catch {
     return EMPTY_PROGRESS;
   }
+}
+
+function normalizeReviewProgress(value: unknown): ReviewProgress {
+  if (!value || typeof value !== 'object') return { topics: {}, history: [] };
+  const candidate = value as Partial<ReviewProgress>;
+  return {
+    topics: candidate.topics && typeof candidate.topics === 'object' ? candidate.topics : {},
+    history: Array.isArray(candidate.history) ? candidate.history.filter(isReviewHistoryEntry).slice(0, 100) : [],
+  };
+}
+
+function isReviewHistoryEntry(value: unknown): value is ReviewHistoryEntry {
+  if (!value || typeof value !== 'object') return false;
+  const entry = value as Partial<ReviewHistoryEntry>;
+  return isTopicId(entry.topicId) && ['knew', 'practice', 'skipped'].includes(entry.outcome ?? '')
+    && [1, 2, 3, 4, 5].includes(entry.confidence ?? 0)
+    && typeof entry.id === 'string' && typeof entry.reviewedAt === 'string' && typeof entry.nextReviewAt === 'string';
 }
 
 export function writeProgress(progress: StudyProgress): void {
