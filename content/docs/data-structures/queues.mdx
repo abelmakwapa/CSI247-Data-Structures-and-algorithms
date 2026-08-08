@@ -1,0 +1,113 @@
+---
+title: Queues
+description: "A fair line for work: new arrivals join the rear while the oldest request leaves the front."
+---
+
+<TopicHero topicId="queues" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A queue separates arrival from service. Enqueue writes at the back; dequeue reads at the front. With front and rear pointers, neither operation needs to scan the line.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+FIFO: preserve arrival order when fairness or chronology is the rule.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a queue when work should be processed in arrival order.
+
+### Where it appears
+
+- print jobs
+- BFS
+- request buffers
+- task pipelines
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A coffee-shop line">
+You join at the back and the person who arrived first gets served first. No cutting, no rescanning.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="queues" />
+
+## Operation lab
+
+The front and rear pointers keep the line moving without shifting every waiting item.
+
+<OperationLab topicId="queues" />
+
+## Complexity table
+
+<ComplexityTable topicId="queues" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="queues" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const queue = [];
+queue.push('request A'); // enqueue
+queue.push('request B');
+
+const first = queue.shift(); // dequeue
+// in production: use a head index or deque
+```
+
+#### Python
+
+```python
+from collections import deque
+
+queue = deque(["request A"])
+queue.append("request B")
+first = queue.popleft()
+```
+
+## Trade-offs
+
+### Strengths
+
+- Preserves arrival order
+- Natural back-pressure boundary
+
+### Watch-outs
+
+- Naive array shift can be O(n)
+- Only the front is immediately actionable
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+FIFO: preserve arrival order when fairness or chronology is the rule. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Use a head index or circular buffer for an array-backed queue.
+- BFS is queue-shaped because distance from the source grows layer by layer.
+- Check whether the problem wants FIFO or priority ordering.
+
+### Questions worth rehearsing
+
+- Why can array.shift() be a trap?
+- Where does a queue appear inside a web server?
+
+## Active recall quiz
+
+<Quiz topicId="queues" />
+
+<StudyNotes topicId="queues" />
+
+<RelatedTopics topicIds={["stacks","deques","graphs"]} />

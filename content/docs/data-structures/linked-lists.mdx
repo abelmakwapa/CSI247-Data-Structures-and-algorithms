@@ -1,0 +1,120 @@
+---
+title: Linked Lists
+description: "A chain of small records that optimizes for local edits instead of direct access."
+---
+
+<TopicHero topicId="linked-lists" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A linked list stores each value beside a pointer to the next node. Nodes can live anywhere in memory; the pointers preserve the order. The structure is a path, not a row.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Linked lists make rewiring cheap, but make finding the next node a journey.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a linked list when nodes move often and you already hold the insertion point.
+
+### Where it appears
+
+- queues
+- undo chains
+- memory allocators
+- adjacency lists
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Treasure-hunt clues">
+Each clue tells you where the next one is. You can insert a clue by changing two pointers, but you cannot skip to clue 47.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="linked-lists" />
+
+## Operation lab
+
+The pointer update is cheap once you have the node. Finding that node is the expensive part.
+
+<OperationLab topicId="linked-lists" />
+
+## Complexity table
+
+<ComplexityTable topicId="linked-lists" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="linked-lists" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+// splice after node: only two links change
+newNode.next = node.next;
+node.next = newNode;
+```
+
+#### Python
+
+```python
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+# splice after node
+new.next = node.next
+node.next = new
+```
+
+## Trade-offs
+
+### Strengths
+
+- O(1) insertion with a known node
+- Grows without a contiguous block
+
+### Watch-outs
+
+- O(n) access and search
+- Extra pointer memory per node
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Linked lists make rewiring cheap, but make finding the next node a journey. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Say “O(1) given a node reference” — not simply “insertion is O(1).”
+- Compare a singly linked list with a doubly linked list before choosing.
+- Sentinel nodes can remove edge-case branches at the head and tail.
+
+### Questions worth rehearsing
+
+- Why is indexing a linked list O(n)?
+- What exactly changes when you delete a node?
+
+## Active recall quiz
+
+<Quiz topicId="linked-lists" />
+
+<StudyNotes topicId="linked-lists" />
+
+<RelatedTopics topicIds={["arrays","stacks","queues"]} />

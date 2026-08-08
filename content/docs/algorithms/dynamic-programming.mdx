@@ -1,0 +1,61 @@
+---
+title: Dynamic Programming
+description: Solve overlapping subproblems once and reuse their states.
+---
+
+<TopicHero topicId="dynamic-programming" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="State first, transition second">
+Dynamic programming combines optimal substructure with overlapping subproblems. Define a state, base cases, and a transition, then compute each state once top-down or bottom-up.
+</AcademicPanel>
+
+## The problem it solves
+
+DP handles knapsack, edit distance, grid paths, sequence problems, and recursive searches that repeat the same state.
+
+## Real-world analogy
+
+Write down the best route to each smaller destination so later routes reuse those answers instead of walking the same streets again.
+
+## Visual explainer
+
+<TopicDiagram topicId="dynamic-programming" />
+
+## Operation lab
+
+<OperationLab topicId="dynamic-programming" />
+
+## Complexity table
+
+<ComplexityTable topicId="dynamic-programming" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="dynamic-programming" />
+
+## Trade-offs
+
+- Memoization removes repeated work and bottom-up tables make dependency order explicit.
+- State design is harder than the final loop, and the table may consume substantial memory.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="A table is not a state definition">
+Explain what one cell means in a full sentence before writing the transition. Otherwise it is easy to compute the wrong answer efficiently.
+</AcademicPanel>
+
+## Interview questions
+
+- What are the state, base cases, and transition?
+- Is memoization or tabulation more natural here?
+- Can the table be space-compressed, and do you need reconstruction?
+
+## Active recall quiz
+
+<Quiz topicId="dynamic-programming" />
+
+<StudyNotes topicId="dynamic-programming" />
+
+<RelatedTopics topicIds={["recursion", "greedy-algorithms", "lru-cache"]} />

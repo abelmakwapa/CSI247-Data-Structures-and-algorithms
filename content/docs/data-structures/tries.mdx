@@ -1,0 +1,116 @@
+---
+title: Tries
+description: "A character-by-character tree that makes shared prefixes first-class data."
+---
+
+<TopicHero topicId="tries" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A trie stores strings by walking one edge per character. Words with the same prefix share the same path, so autocomplete can jump to a prefix in O(k), where k is the number of typed characters.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Hash maps find exact words; tries find words that begin the same way.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a trie when prefixes, autocomplete, or lexicographic traversal matter.
+
+### Where it appears
+
+- autocomplete
+- spellcheck
+- IP routing
+- dictionaries
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Autocomplete">
+Type “app” and the search engine follows three shared letter edges before exploring only the matching branch.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="tries" />
+
+## Operation lab
+
+The cost depends on the key length, not on how many unrelated words live in the dictionary.
+
+<OperationLab topicId="tries" />
+
+## Complexity table
+
+<ComplexityTable topicId="tries" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="tries" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+class TrieNode {
+  constructor() {
+    this.children = new Map();
+    this.isWord = false;
+  }
+}
+
+// insert “app”: a → p → p
+```
+
+#### Python
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+
+# insert walks one edge per character
+```
+
+## Trade-offs
+
+### Strengths
+
+- Prefix lookup is direct
+- Shared prefixes reduce repeated work
+
+### Watch-outs
+
+- High memory overhead
+- Not ideal for arbitrary non-string keys
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Hash maps find exact words; tries find words that begin the same way. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Define k and z before stating prefix complexity.
+- Terminal markers distinguish “app” from the longer word “apple.”
+- Compressed tries trade implementation complexity for space.
+
+### Questions worth rehearsing
+
+- Why can a hash map not answer prefix queries directly?
+- What does a terminal marker mean?
+
+## Active recall quiz
+
+<Quiz topicId="tries" />
+
+<StudyNotes topicId="tries" />
+
+<RelatedTopics topicIds={["trees","hash-maps","binary-search"]} />

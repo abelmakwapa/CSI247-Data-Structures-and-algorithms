@@ -1,0 +1,112 @@
+---
+title: Heaps
+description: "A nearly ordered tree that keeps the highest-priority item at the root without fully sorting everything."
+---
+
+<TopicHero topicId="heaps" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A heap maintains a local parent–child priority rule plus a complete-tree shape. In a max heap, the largest item rises to the root; in a min heap, the smallest does. The rest is only partially ordered.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+A heap is for “give me the most important next,” not “find any key.”
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a heap when the next item is chosen by priority and the data keeps changing.
+
+### Where it appears
+
+- priority queues
+- schedulers
+- Dijkstra
+- top-k queries
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="An emergency room">
+Urgency outranks arrival time. The critical patient must be available first, while the rest only need a workable priority order.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="heaps" />
+
+## Operation lab
+
+A heap spends O(log n) to restore order after a change so the next priority stays at the top.
+
+<OperationLab topicId="heaps" />
+
+## Complexity table
+
+<ComplexityTable topicId="heaps" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="heaps" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const tasks = new MinPriorityQueue();
+tasks.enqueue({ job: 'backup', priority: 4 });
+tasks.enqueue({ job: 'deploy', priority: 1 });
+
+console.log(tasks.dequeue().element.job); // deploy
+```
+
+#### Python
+
+```python
+import heapq
+
+tasks = []
+heapq.heappush(tasks, (1, "deploy"))
+priority, job = heapq.heappop(tasks)
+```
+
+## Trade-offs
+
+### Strengths
+
+- Fast access to the best priority
+- Efficient incremental updates
+
+### Watch-outs
+
+- Not fully sorted for arbitrary search
+- Priority updates need careful implementation
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+A heap is for “give me the most important next,” not “find any key.” When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Heap shape is complete; heap order is only parent versus children.
+- Explain bubble-up and sink-down, not just “it sorts.”
+- Know how to implement one in an array with parent/child indices.
+
+### Questions worth rehearsing
+
+- Why is heap peek O(1) but heap search O(n)?
+- Why can build-heap be O(n)?
+
+## Active recall quiz
+
+<Quiz topicId="heaps" />
+
+<StudyNotes topicId="heaps" />
+
+<RelatedTopics topicIds={["binary-search-trees","queues","sorting"]} />

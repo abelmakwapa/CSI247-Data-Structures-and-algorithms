@@ -1,0 +1,61 @@
+---
+title: Sorting
+description: Reorder values so later work can exploit order.
+---
+
+<TopicHero topicId="sorting" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Pay once to create order">
+Sorting repeatedly compares or places values until the sequence follows an order. Ask about time, space, stability, and whether comparison is the only available information.
+</AcademicPanel>
+
+## The problem it solves
+
+Sorting makes duplicate detection, ranking, interval scheduling, two-pointer scans, and ordered search easier to express.
+
+## Real-world analogy
+
+Arrange books by height once and later queries can scan a predictable shelf instead of a random pile.
+
+## Visual explainer
+
+<TopicDiagram topicId="sorting" />
+
+## Operation lab
+
+<OperationLab topicId="sorting" />
+
+## Complexity table
+
+<ComplexityTable topicId="sorting" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="sorting" />
+
+## Trade-offs
+
+- Ordering simplifies many later algorithms.
+- Sorting may be unnecessary work, and stability or in-place behavior depends on the algorithm and runtime.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Do not stop at O(n log n)">
+State whether the sort is stable, what its auxiliary space is, and whether the input constraints allow counting or radix-style methods.
+</AcademicPanel>
+
+## Interview questions
+
+- Why can sorting expose duplicates?
+- What is the comparison-sort lower bound?
+- When is a simple O(n²) sort acceptable?
+
+## Active recall quiz
+
+<Quiz topicId="sorting" />
+
+<StudyNotes topicId="sorting" />
+
+<RelatedTopics topicIds={["arrays", "binary-search", "big-o"]} />

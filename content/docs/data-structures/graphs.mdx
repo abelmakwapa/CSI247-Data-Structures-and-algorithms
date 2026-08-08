@@ -1,0 +1,115 @@
+---
+title: Graphs
+description: "Dots and connections for systems where relationships matter more than hierarchy."
+---
+
+<TopicHero topicId="graphs" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A graph is a set of vertices connected by edges. Edges can be directed or undirected, weighted or unweighted. Graphs do not need one root, and cycles are normal.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+If the problem says “connected,” “reachable,” or “shortest path,” think graph.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a graph when entities connect in more than one direction or through cycles.
+
+### Where it appears
+
+- maps
+- social feeds
+- dependencies
+- recommendations
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Maps and social networks">
+Cities are nodes and roads are edges; friends are nodes and relationships are edges. The connections are the data.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="graphs" />
+
+## Operation lab
+
+Traversal cost is about vertices plus edges: visit the things and inspect the relationships.
+
+<OperationLab topicId="graphs" />
+
+## Complexity table
+
+<ComplexityTable topicId="graphs" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="graphs" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const graph = new Map([
+  ['A', ['B', 'C']],
+  ['B', ['A', 'D']],
+  ['C', ['A']]
+]);
+
+// BFS = queue + visited set
+```
+
+#### Python
+
+```python
+graph = {
+    "A": ["B", "C"],
+    "B": ["A", "D"]
+}
+
+# BFS = deque + visited set
+```
+
+## Trade-offs
+
+### Strengths
+
+- Models arbitrary relationships
+- Many powerful algorithms compose on it
+
+### Watch-outs
+
+- Representation choice changes performance
+- Cycles require visited-state discipline
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+If the problem says “connected,” “reachable,” or “shortest path,” think graph. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Choose adjacency list for sparse graphs; matrix for dense or instant edge checks.
+- Mark visited when you enqueue/push, not only when you remove.
+- Separate connectivity, shortest path, and ordering as different questions.
+
+### Questions worth rehearsing
+
+- When is an adjacency matrix the right choice?
+- Why must graph traversal track visited nodes?
+
+## Active recall quiz
+
+<Quiz topicId="graphs" />
+
+<StudyNotes topicId="graphs" />
+
+<RelatedTopics topicIds={["queues","trees","disjoint-set-union"]} />

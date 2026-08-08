@@ -1,0 +1,112 @@
+---
+title: Hash Maps
+description: "Turn a key into a near-direct address so lookup does not scale with the size of the collection."
+---
+
+<TopicHero topicId="hash-maps" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A hash map converts a key into a bucket index with a hash function, then stores the key–value pair there. Average-case lookup is fast because the map avoids scanning unrelated keys.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Key in, value out: hashing buys speed with extra space and collision rules.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a hash map when exact-key lookup matters more than sorted order.
+
+### Where it appears
+
+- caches
+- frequency counts
+- indexes
+- memoization
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Phone contacts">
+Search “Mom” and jump to her number. You do not scroll past every contact because the name chooses the slot.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="hash-maps" />
+
+## Operation lab
+
+The ideal jump is constant-time. Collisions and resizing are the hidden work behind the magic.
+
+<OperationLab topicId="hash-maps" />
+
+## Complexity table
+
+<ComplexityTable topicId="hash-maps" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="hash-maps" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const phone = new Map();
+phone.set('Mom', '+267 555 0147');
+
+if (phone.has('Mom')) {
+  console.log(phone.get('Mom'));
+}
+```
+
+#### Python
+
+```python
+phone = {"Mom": "+267 555 0147"}
+
+if "Mom" in phone:
+    print(phone["Mom"])
+```
+
+## Trade-offs
+
+### Strengths
+
+- Fast exact-key lookup
+- Excellent for counting and caching
+
+### Watch-outs
+
+- Extra memory for buckets
+- No useful prefix or sorted traversal by default
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Key in, value out: hashing buys speed with extra space and collision rules. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Mention load factor, resizing, and collision handling.
+- Use a map when the question gives you a key, not when you need range order.
+- For two-sum, store complements as you scan.
+
+### Questions worth rehearsing
+
+- What causes a hash collision?
+- Why is hash-map lookup average O(1), not guaranteed O(1)?
+
+## Active recall quiz
+
+<Quiz topicId="hash-maps" />
+
+<StudyNotes topicId="hash-maps" />
+
+<RelatedTopics topicIds={["hash-sets","lru-cache","tries"]} />

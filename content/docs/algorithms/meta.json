@@ -1,0 +1,5 @@
+{
+  "title": "Algorithms",
+  "description": "Turn invariants and constraints into repeatable problem-solving moves.",
+  "pages": ["sorting", "binary-search", "recursion", "backtracking", "greedy-algorithms", "dynamic-programming", "big-o"]
+}

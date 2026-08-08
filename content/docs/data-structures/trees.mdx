@@ -1,0 +1,115 @@
+---
+title: Trees
+description: "A parent–child model for data that branches: one root, many paths, and leaves at the edge."
+---
+
+<TopicHero topicId="trees" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A tree turns hierarchy into explicit structure. Each node owns children; every node has one path back to the root. Unlike a BST, a plain tree does not promise that values are sorted.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Use a tree when the data already has a parent–child shape.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a tree when nested ownership or hierarchy is the problem.
+
+### Where it appears
+
+- file systems
+- DOM nodes
+- org charts
+- decision trees
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A file explorer">
+A root folder branches into folders, which branch into files. The path is the meaning.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="trees" />
+
+## Operation lab
+
+Tree operations depend less on “index” and more on how many descendants or levels you traverse.
+
+<OperationLab topicId="trees" />
+
+## Complexity table
+
+<ComplexityTable topicId="trees" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="trees" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const folder = {
+  name: 'src',
+  children: [
+    { name: 'index.js', children: [] },
+    { name: 'components', children: [] }
+  ]
+};
+```
+
+#### Python
+
+```python
+folder = {
+    "name": "src",
+    "children": [
+        {"name": "index.py", "children": []}
+    ]
+}
+```
+
+## Trade-offs
+
+### Strengths
+
+- Matches nested real-world data
+- Traversal strategies are composable
+
+### Watch-outs
+
+- No search shortcut without extra rules
+- Deep, unbalanced trees can be expensive
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Use a tree when the data already has a parent–child shape. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Define root, parent, child, leaf, depth, and height precisely.
+- Choose DFS for path-shaped work and BFS for level-shaped work.
+- Ask whether a tree is ordered, balanced, or merely hierarchical.
+
+### Questions worth rehearsing
+
+- What is the difference between depth and height?
+- When is BFS more natural than DFS?
+
+## Active recall quiz
+
+<Quiz topicId="trees" />
+
+<StudyNotes topicId="trees" />
+
+<RelatedTopics topicIds={["binary-search-trees","graphs","tries"]} />

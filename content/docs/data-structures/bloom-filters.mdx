@@ -1,0 +1,114 @@
+---
+title: Bloom Filters
+description: "A compact probabilistic gate that can say “definitely not” or “maybe yes.”"
+---
+
+<TopicHero topicId="bloom-filters" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A Bloom filter hashes each item into several bit positions. A zero bit proves absence; all-one bits only suggest presence because another item may have set the same bits.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+A Bloom filter can be wrong only by saying yes too often — never by hiding a real member.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a Bloom filter when memory is tight and a false positive is acceptable.
+
+### Where it appears
+
+- URL safety
+- cache admission
+- spam filters
+- large blocklists
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A fast pre-check">
+A security gate rules out most bad URLs cheaply. A “maybe” still gets a slower, exact check; a “no” is final.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="bloom-filters" />
+
+## Operation lab
+
+Use the filter as a gate before expensive work; never treat “maybe” as proof.
+
+<OperationLab topicId="bloom-filters" />
+
+## Complexity table
+
+<ComplexityTable topicId="bloom-filters" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="bloom-filters" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const filter = new BloomFilter({
+  size: 1_000_000, hashes: 4
+});
+
+filter.add('/known-malware');
+filter.mightContain('/checkout'); // maybe
+```
+
+#### Python
+
+```python
+class BloomFilter:
+    def add(self, item):
+        for h in self.hashes:
+            self.bits[h(item)] = 1
+
+# yes = maybe; no = certain
+```
+
+## Trade-offs
+
+### Strengths
+
+- Tiny memory footprint
+- Fast, predictable checks
+
+### Watch-outs
+
+- False positives need exact follow-up
+- Standard Bloom filters do not support safe deletion
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+A Bloom filter can be wrong only by saying yes too often — never by hiding a real member. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Say exactly which error is impossible: false negatives.
+- False-positive rate depends on bit count, hash count, and inserts.
+- Use a counting Bloom filter if deletion is required.
+
+### Questions worth rehearsing
+
+- Why can a Bloom filter say “yes” incorrectly?
+- What should happen after a “maybe” result?
+
+## Active recall quiz
+
+<Quiz topicId="bloom-filters" />
+
+<StudyNotes topicId="bloom-filters" />
+
+<RelatedTopics topicIds={["hash-sets","hash-maps","lru-cache"]} />

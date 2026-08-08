@@ -1,0 +1,61 @@
+---
+title: Greedy Algorithms
+description: Commit to a locally safe choice when a proof supports global optimality.
+---
+
+<TopicHero topicId="greedy-algorithms" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Best safe next move">
+A greedy algorithm commits to a local choice and never revisits it. The method is correct only when an exchange argument, cut property, or related proof shows the choice can belong to an optimum.
+</AcademicPanel>
+
+## The problem it solves
+
+Greedy methods appear in interval scheduling, minimum spanning trees, Huffman coding, and other problems where local structure safely composes.
+
+## Real-world analogy
+
+Choose the next activity that frees the room earliest, but only trust that rule after proving an optimal schedule can make the same choice.
+
+## Visual explainer
+
+<TopicDiagram topicId="greedy-algorithms" />
+
+## Operation lab
+
+<OperationLab topicId="greedy-algorithms" />
+
+## Complexity table
+
+<ComplexityTable topicId="greedy-algorithms" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="greedy-algorithms" />
+
+## Trade-offs
+
+- Greedy code is often short and memory-light after sorting.
+- A plausible local choice can be globally wrong; the proof depends on the exact problem.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Greedy is a proof obligation">
+“Pick the largest” or “pick the smallest” is a heuristic until you explain why an optimal solution can exchange in that choice without getting worse.
+</AcademicPanel>
+
+## Interview questions
+
+- What is the greedy key?
+- How would an exchange argument prove the choice safe?
+- Why does this problem need DP instead of greedy?
+
+## Active recall quiz
+
+<Quiz topicId="greedy-algorithms" />
+
+<StudyNotes topicId="greedy-algorithms" />
+
+<RelatedTopics topicIds={["sorting", "heaps", "dynamic-programming"]} />

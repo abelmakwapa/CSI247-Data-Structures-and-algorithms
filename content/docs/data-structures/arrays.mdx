@@ -1,0 +1,114 @@
+---
+title: Arrays
+description: "The fastest way to reach a known position — and a reminder that flexibility always has a price."
+---
+
+<TopicHero topicId="arrays" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+An array is a row of same-sized slots packed next to one another. Because the address of slot *i* can be calculated directly, reading by index is a single jump.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Arrays trade flexible edits for predictable, O(1) access.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for an array when positions are known and reads dominate.
+
+### Where it appears
+
+- pixel grids
+- lookup tables
+- buffers
+- fixed records
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Movie theatre seats">
+Every seat has a numbered position, so seat 47 is reachable without checking seats 1–46.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="arrays" />
+
+## Operation lab
+
+A direct index lookup is constant-time; edits in the middle pay for every shifted element.
+
+<OperationLab topicId="arrays" />
+
+## Complexity table
+
+<ComplexityTable topicId="arrays" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="arrays" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const seats = [10, 20, 30, 40];
+
+// direct read: address = base + index × slotSize
+console.log(seats[2]); // 30
+
+// inserting at index 1 shifts the tail
+seats.splice(1, 0, 15);
+```
+
+#### Python
+
+```python
+seats = [10, 20, 30, 40]
+
+# direct read
+print(seats[2])  # 30
+seats.insert(1, 15)
+```
+
+## Trade-offs
+
+### Strengths
+
+- Instant access by position
+- Cache-friendly contiguous layout
+
+### Watch-outs
+
+- Fixed capacity in a low-level array
+- Middle edits move the tail
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Arrays trade flexible edits for predictable, O(1) access. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Name the invariant: elements are stored contiguously and indexed from zero.
+- Separate worst-case insertion from amortized append when discussing dynamic arrays.
+- Always state the memory trade-off: unused capacity buys faster appends.
+
+### Questions worth rehearsing
+
+- Why is array access O(1) even when n grows?
+- When would a linked list be a better fit?
+
+## Active recall quiz
+
+<Quiz topicId="arrays" />
+
+<StudyNotes topicId="arrays" />
+
+<RelatedTopics topicIds={["linked-lists","binary-search","sorting"]} />

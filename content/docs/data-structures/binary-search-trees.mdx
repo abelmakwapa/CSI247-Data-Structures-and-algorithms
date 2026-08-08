@@ -1,0 +1,114 @@
+---
+title: Binary Search Trees
+description: "A binary tree with one ordering rule that lets each comparison eliminate a whole side."
+---
+
+<TopicHero topicId="binary-search-trees" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+At every node, values smaller go left and larger go right. Search follows comparisons from the root, so a balanced BST can behave like binary search over a dynamic set.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+The BST rule is the shortcut; balance is what keeps the shortcut alive.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a BST when you need dynamic sorted data, not just exact-key lookup.
+
+### Where it appears
+
+- ordered sets
+- range queries
+- symbol tables
+- in-order output
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Number guessing">
+Guess 500, then cut the remaining range in half based on “too high” or “too low.”
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="binary-search-trees" />
+
+## Operation lab
+
+The “log n” story only holds while the tree stays reasonably balanced.
+
+<OperationLab topicId="binary-search-trees" />
+
+## Complexity table
+
+<ComplexityTable topicId="binary-search-trees" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="binary-search-trees" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+function contains(node, target) {
+  if (!node) return false;
+  if (target === node.value) return true;
+  return target < node.value
+    ? contains(node.left, target)
+    : contains(node.right, target);
+}
+```
+
+#### Python
+
+```python
+def contains(node, target):
+    if node is None: return False
+    if target == node.value: return True
+    child = node.left if target < node.value else node.right
+    return contains(child, target)
+```
+
+## Trade-offs
+
+### Strengths
+
+- Sorted traversal comes for free
+- Can support range queries
+
+### Watch-outs
+
+- Balance is not automatic in a plain BST
+- Deletion has several structural cases
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+The BST rule is the shortcut; balance is what keeps the shortcut alive. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Always qualify O(log n) with “balanced.”
+- Know the three deletion cases: leaf, one child, two children.
+- Self-balancing variants (AVL, red–black) preserve the height bound.
+
+### Questions worth rehearsing
+
+- Why does sorted insertion create a bad BST?
+- Why does in-order traversal produce sorted output?
+
+## Active recall quiz
+
+<Quiz topicId="binary-search-trees" />
+
+<StudyNotes topicId="binary-search-trees" />
+
+<RelatedTopics topicIds={["trees","binary-search","heaps"]} />

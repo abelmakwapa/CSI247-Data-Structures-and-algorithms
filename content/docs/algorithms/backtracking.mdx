@@ -1,0 +1,61 @@
+---
+title: Backtracking
+description: Depth-first choice exploration with explicit undo and pruning.
+---
+
+<TopicHero topicId="backtracking" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Choose, explore, unchoose">
+Backtracking searches a decision tree. It adds a candidate, explores the partial solution, and restores state before trying the next candidate.
+</AcademicPanel>
+
+## The problem it solves
+
+Use it for permutations, subsets, N-Queens, constraint puzzles, and any task that asks for one or all valid arrangements.
+
+## Real-world analogy
+
+Mark a turn in a maze, walk forward, and erase the mark when the corridor dead-ends so another route can reuse the junction.
+
+## Visual explainer
+
+<TopicDiagram topicId="backtracking" />
+
+## Operation lab
+
+<OperationLab topicId="backtracking" />
+
+## Complexity table
+
+<ComplexityTable topicId="backtracking" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="backtracking" />
+
+## Trade-offs
+
+- Constraints can be checked close to the choice that violates them, producing useful pruning.
+- The worst case is exponential, and mutable state is easy to leak between branches.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Undo the exact mutation you made">
+If a branch pushes, marks, or swaps state, the matching undo must happen before the sibling branch runs.
+</AcademicPanel>
+
+## Interview questions
+
+- What is the state at one recursion level?
+- Why is the pruning condition sound?
+- Do you need one solution, all solutions, or the best solution?
+
+## Active recall quiz
+
+<Quiz topicId="backtracking" />
+
+<StudyNotes topicId="backtracking" />
+
+<RelatedTopics topicIds={["recursion", "stacks", "dynamic-programming"]} />

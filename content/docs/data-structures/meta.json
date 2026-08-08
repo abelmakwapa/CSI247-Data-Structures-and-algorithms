@@ -1,0 +1,5 @@
+{
+  "title": "Data structures",
+  "description": "Choose a representation that makes the important operation cheap.",
+  "pages": ["arrays", "linked-lists", "stacks", "queues", "deques", "hash-maps", "hash-sets", "trees", "binary-search-trees", "heaps", "graphs", "tries", "disjoint-set-union", "bloom-filters", "lru-cache"]
+}

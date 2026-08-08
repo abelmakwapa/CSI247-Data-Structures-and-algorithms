@@ -1,0 +1,61 @@
+---
+title: Recursion
+description: A function solves a smaller instance and returns through the call stack.
+---
+
+<TopicHero topicId="recursion" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Progress plus a base case">
+Each call owns local state and delegates a smaller problem. A base case returns a known answer; the call stack then resumes waiting frames in reverse order.
+</AcademicPanel>
+
+## The problem it solves
+
+Recursion matches trees, divide-and-conquer, nested parsing, backtracking, and inductive proofs.
+
+## Real-world analogy
+
+Open nested boxes until the last box is empty, then close them from the inside out.
+
+## Visual explainer
+
+<TopicDiagram topicId="recursion" />
+
+## Operation lab
+
+<OperationLab topicId="recursion" />
+
+## Complexity table
+
+<ComplexityTable topicId="recursion" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="recursion" />
+
+## Trade-offs
+
+- Recursive structure is often clearer for nested or self-similar data.
+- Deep recursion can overflow the call stack, and overlapping subproblems can repeat work without memoization.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Prove progress toward the base case">
+Every recursive call must move closer to termination. If it does not, the function has no reason to stop.
+</AcademicPanel>
+
+## Interview questions
+
+- What does the call stack store?
+- When should recursion become an explicit stack?
+- How does memoization change a recursive solution?
+
+## Active recall quiz
+
+<Quiz topicId="recursion" />
+
+<StudyNotes topicId="recursion" />
+
+<RelatedTopics topicIds={["stacks", "backtracking", "dynamic-programming"]} />

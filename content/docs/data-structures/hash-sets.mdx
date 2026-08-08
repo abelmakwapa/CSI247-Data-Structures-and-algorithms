@@ -1,0 +1,113 @@
+---
+title: Hash Sets
+description: "The stripped-down membership engine: keep the keys, discard the values, reject duplicates."
+---
+
+<TopicHero topicId="hash-sets" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A hash set answers one question efficiently: “is this item already present?” It uses hash-based buckets like a map, but the item itself is the key and there is no associated value.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+When the answer is only yes or no, a set is often the cleanest tool.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a set when presence and uniqueness are the whole problem.
+
+### Where it appears
+
+- deduplication
+- visited nodes
+- permissions
+- fast filters
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A guest list at the door">
+The bouncer does not need your table number. They only need to know whether your name exists on the list.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="hash-sets" />
+
+## Operation lab
+
+The set is the “have I seen this?” primitive that turns repeated scans into direct membership checks.
+
+<OperationLab topicId="hash-sets" />
+
+## Complexity table
+
+<ComplexityTable topicId="hash-sets" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="hash-sets" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const seen = new Set();
+for (const value of values) {
+  if (seen.has(value)) return true;
+  seen.add(value);
+}
+return false;
+```
+
+#### Python
+
+```python
+seen = set()
+for value in values:
+    if value in seen:
+        return True
+    seen.add(value)
+```
+
+## Trade-offs
+
+### Strengths
+
+- Membership is fast and expressive
+- Uniqueness is automatic
+
+### Watch-outs
+
+- Cannot retrieve a value by key
+- Uses more memory than a tiny list
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+When the answer is only yes or no, a set is often the cleanest tool. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Use a set to track visited nodes in graph traversal.
+- If you need counts or payloads, use a map instead.
+- Know that set iteration order is a language guarantee question, not a hashing property.
+
+### Questions worth rehearsing
+
+- How would you find the first duplicate?
+- When is a set better than sorting?
+
+## Active recall quiz
+
+<Quiz topicId="hash-sets" />
+
+<StudyNotes topicId="hash-sets" />
+
+<RelatedTopics topicIds={["hash-maps","graphs","sorting"]} />

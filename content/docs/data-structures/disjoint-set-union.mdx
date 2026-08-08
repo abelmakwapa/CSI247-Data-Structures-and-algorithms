@@ -1,0 +1,114 @@
+---
+title: Disjoint Set Union
+description: "A tiny structure for tracking which items belong to the same connected component as groups merge."
+---
+
+<TopicHero topicId="disjoint-set-union" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+Each element starts in its own set. Union joins two sets; find returns the representative of the set. Path compression and union by rank make repeated connectivity checks nearly constant-time.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Union–find answers “are these in the same group?” without rebuilding the groups.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for DSU when components merge and you only need connectivity, not the path itself.
+
+### Where it appears
+
+- Kruskal MST
+- network clusters
+- image components
+- percolation
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="Merging friend circles">
+Every person starts alone; when two people connect, their circles merge. A leader gives the whole component one identity.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="disjoint-set-union" />
+
+## Operation lab
+
+The structure gets faster as it flattens the paths it has already used.
+
+<OperationLab topicId="disjoint-set-union" />
+
+## Complexity table
+
+<ComplexityTable topicId="disjoint-set-union" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="disjoint-set-union" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+function find(x) {
+  if (parent[x] !== x) parent[x] = find(parent[x]);
+  return parent[x];
+}
+
+function union(a, b) {
+  parent[find(a)] = find(b);
+}
+```
+
+#### Python
+
+```python
+def find(x):
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
+```
+
+## Trade-offs
+
+### Strengths
+
+- Nearly constant amortized connectivity
+- Minimal state for merging components
+
+### Watch-outs
+
+- Does not expose the actual path
+- Harder to undo without a rollback design
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Union–find answers “are these in the same group?” without rebuilding the groups. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Path compression updates parents during find.
+- Union by size/rank keeps trees shallow.
+- Do not use DSU for directed reachability or path reconstruction.
+
+### Questions worth rehearsing
+
+- What does path compression change?
+- Why is DSU useful for Kruskal’s algorithm?
+
+## Active recall quiz
+
+<Quiz topicId="disjoint-set-union" />
+
+<StudyNotes topicId="disjoint-set-union" />
+
+<RelatedTopics topicIds={["graphs","heaps","greedy-algorithms"]} />

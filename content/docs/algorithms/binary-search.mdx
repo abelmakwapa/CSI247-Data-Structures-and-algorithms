@@ -1,0 +1,61 @@
+---
+title: Binary Search
+description: Halve a sorted or monotonic search space after each comparison.
+---
+
+<TopicHero topicId="binary-search" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Keep a valid interval">
+Compare the target with the midpoint, discard the impossible half, and preserve an invariant that the answer—if it exists—remains inside the interval.
+</AcademicPanel>
+
+## The problem it solves
+
+Binary search finds values in sorted arrays and answers monotonic “first feasible” or “minimum valid” questions in logarithmic iterations.
+
+## Real-world analogy
+
+Guess a number by asking “higher or lower?” at the midpoint, never reopening a half already ruled out.
+
+## Visual explainer
+
+<TopicDiagram topicId="binary-search" />
+
+## Operation lab
+
+<OperationLab topicId="binary-search" />
+
+## Complexity table
+
+<ComplexityTable topicId="binary-search" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="binary-search" />
+
+## Trade-offs
+
+- Logarithmic search is powerful on large ordered ranges.
+- Unsorted input breaks the discard proof, and boundary conventions create off-by-one bugs.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Write the invariant before the loop">
+Decide whether your interval is closed or half-open, then test empty input, one item, endpoints, and missing values.
+</AcademicPanel>
+
+## Interview questions
+
+- What exactly does the interval invariant say?
+- How do you find a lower bound or first feasible answer?
+- When does sorting cost more than it saves?
+
+## Active recall quiz
+
+<Quiz topicId="binary-search" />
+
+<StudyNotes topicId="binary-search" />
+
+<RelatedTopics topicIds={["arrays", "sorting", "binary-search-trees"]} />

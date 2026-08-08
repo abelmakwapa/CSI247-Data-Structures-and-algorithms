@@ -1,0 +1,61 @@
+---
+title: Big O Analysis
+description: Describe how time and space grow as input size grows.
+---
+
+<TopicHero topicId="big-o" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="A language for growth">
+Big O describes how a resource grows with input size while ignoring constant factors and lower-order detail. Name the input variable, resource, case, and assumptions.
+</AcademicPanel>
+
+## The problem it solves
+
+Complexity analysis lets you compare approaches, anticipate scale, and explain why an algorithm fits—or fails—the constraints.
+
+## Real-world analogy
+
+A fixed five-second setup matters less than whether the work doubles, grows linearly, or explodes when the input doubles.
+
+## Visual explainer
+
+<TopicDiagram topicId="big-o" />
+
+## Operation lab
+
+<OperationLab topicId="big-o" />
+
+## Complexity table
+
+<ComplexityTable topicId="big-o" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="big-o" />
+
+## Trade-offs
+
+- Growth rates make scalability explicit and help compare time against memory.
+- One letter can hide multiple input dimensions, and average, worst-case, and amortized stories can differ.
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Count the dominant work">
+Sequential blocks add, nested work multiplies, and a halving process is logarithmic. Then state auxiliary space separately from input storage.
+</AcademicPanel>
+
+## Interview questions
+
+- Why do constants disappear?
+- How do nested loops affect growth?
+- How do you analyze a recursive recurrence?
+
+## Active recall quiz
+
+<Quiz topicId="big-o" />
+
+<StudyNotes topicId="big-o" />
+
+<RelatedTopics topicIds={["sorting", "binary-search", "dynamic-programming"]} />

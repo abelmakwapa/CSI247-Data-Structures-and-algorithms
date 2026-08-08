@@ -1,0 +1,113 @@
+---
+title: Deque
+description: "A double-ended queue that can behave like a stack, a queue, or something in between."
+---
+
+<TopicHero topicId="deques" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A deque keeps both ends live. Add or remove at the front or back in constant time, then choose the discipline your problem needs as it runs.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+A deque is the shape-shifter: stack from one end, queue across both ends.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a deque when a moving window or policy can act from either edge.
+
+### Where it appears
+
+- sliding windows
+- palindrome checks
+- 0–1 BFS
+- history navigation
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A train with doors on both ends">
+Passengers can board or exit from either side, so the structure adapts to the direction of flow.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="deques" />
+
+## Operation lab
+
+The power is not one special operation; it is constant-time control at both boundaries.
+
+<OperationLab topicId="deques" />
+
+## Complexity table
+
+<ComplexityTable topicId="deques" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="deques" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const window = [];
+window.unshift(9); // add front
+window.push(12);    // add back
+
+const oldest = window.shift();
+const newest = window.pop();
+```
+
+#### Python
+
+```python
+from collections import deque
+
+window = deque([8, 11])
+window.appendleft(5)
+window.pop()  # remove back
+```
+
+## Trade-offs
+
+### Strengths
+
+- Both ends stay cheap
+- Can express several access disciplines
+
+### Watch-outs
+
+- More bookkeeping than a simple stack
+- Array-backed front operations need a real deque
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+A deque is the shape-shifter: stack from one end, queue across both ends. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- Explain why a monotonic deque solves sliding-window max.
+- Do not confuse a deque with a priority queue: ends, not priorities, decide.
+- Clarify whether the implementation supports O(1) front operations.
+
+### Questions worth rehearsing
+
+- How does a deque become a stack?
+- Why is it useful for a sliding window?
+
+## Active recall quiz
+
+<Quiz topicId="deques" />
+
+<StudyNotes topicId="deques" />
+
+<RelatedTopics topicIds={["queues","stacks","graphs"]} />

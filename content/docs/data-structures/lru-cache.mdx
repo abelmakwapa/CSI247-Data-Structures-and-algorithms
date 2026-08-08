@@ -1,0 +1,112 @@
+---
+title: LRU Cache
+description: "A bounded memory strategy that keeps hot items close and evicts the item untouched for longest."
+---
+
+<TopicHero topicId="lru-cache" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+An LRU cache combines a hash map for O(1) key lookup with a doubly linked list for recency order. Every hit moves a node to the front; capacity pressure removes the back.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+Hash map finds the item; linked-list order decides what to forget.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for LRU when storage is bounded and recent reuse predicts future reuse.
+
+### Where it appears
+
+- browser cache
+- database pages
+- memoization
+- CDN edges
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A tiny desk drawer">
+Keep the tools you just used on top. When the drawer is full, remove the one that has been untouched the longest.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="lru-cache" />
+
+## Operation lab
+
+The map answers “where?” while the linked list answers “what was used most recently?”
+
+<OperationLab topicId="lru-cache" />
+
+## Complexity table
+
+<ComplexityTable topicId="lru-cache" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="lru-cache" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const cache = new LRUCache(2);
+cache.put('route', result);
+cache.get('route'); // route becomes MRU
+
+// when full: remove the tail (LRU)
+```
+
+#### Python
+
+```python
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def fib(n):
+    return n if n < 2 else fib(n-1) + fib(n-2)
+```
+
+## Trade-offs
+
+### Strengths
+
+- O(1) get, put, and eviction
+- Makes the memory policy explicit
+
+### Watch-outs
+
+- More moving parts to implement
+- Recency is not always the right workload model
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+Hash map finds the item; linked-list order decides what to forget. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- State the two structures and what each contributes.
+- Use sentinel head/tail nodes to simplify list mutations.
+- Be precise about when an access updates recency.
+
+### Questions worth rehearsing
+
+- Why are both a map and a doubly linked list needed?
+- What does a cache miss do?
+
+## Active recall quiz
+
+<Quiz topicId="lru-cache" />
+
+<StudyNotes topicId="lru-cache" />
+
+<RelatedTopics topicIds={["hash-maps","linked-lists","dynamic-programming"]} />

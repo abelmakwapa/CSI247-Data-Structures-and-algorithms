@@ -1,0 +1,113 @@
+---
+title: Stacks
+description: "A deliberately narrow interface where the newest item is always the next one out."
+---
+
+<TopicHero topicId="stacks" total={22} />
+
+## Definition and intuition
+
+<AcademicPanel tone="definition" title="Mental model">
+A stack exposes one active end: the top. Push adds there; pop removes there. Restricting access is the feature that keeps both operations constant-time.
+</AcademicPanel>
+
+<AcademicPanel tone="theorem" title="Remember this">
+LIFO: the last thing you put in is the first thing you take out.
+</AcademicPanel>
+
+## The problem it solves
+
+Reach for a stack when the newest unfinished work must resolve first.
+
+### Where it appears
+
+- undo / redo
+- browser back
+- parsing
+- recursion
+
+## Real-world analogy
+
+<AcademicPanel tone="pro" title="A stack of plates">
+You add and remove from the top. Reaching for the middle would defeat the whole arrangement.
+</AcademicPanel>
+
+## Visual explainer
+
+<TopicDiagram topicId="stacks" />
+
+## Operation lab
+
+Every legal operation touches the same end, so the number of steps stays flat.
+
+<OperationLab topicId="stacks" />
+
+## Complexity table
+
+<ComplexityTable topicId="stacks" />
+
+## JavaScript and Python examples
+
+<CodeExample topicId="stacks" />
+
+### Reference snippets from the original field guide
+
+#### JavaScript
+
+```js
+const stack = [];
+stack.push('parse header');
+stack.push('parse body');
+
+const current = stack.pop();
+console.log(current); // parse body
+```
+
+#### Python
+
+```python
+stack = []
+stack.append("parse header")
+stack.append("parse body")
+
+current = stack.pop()  # parse body
+```
+
+## Trade-offs
+
+### Strengths
+
+- Constant-time top operations
+- Makes nested work easy to model
+
+### Watch-outs
+
+- No direct access to the middle
+- Unbounded recursion can overflow the call stack
+
+## Common mistakes
+
+<AcademicPanel tone="warning" title="Pressure-test the trade-off">
+LIFO: the last thing you put in is the first thing you take out. When the workload changes, revisit whether the structure's invariant still matches the problem.
+</AcademicPanel>
+
+## Interview lens
+
+### What a strong answer notices
+
+- State the invariant: only the top is observable.
+- Recognize explicit stacks as the iterative version of recursion.
+- For a min/max stack, store an auxiliary running extreme.
+
+### Questions worth rehearsing
+
+- How would you evaluate balanced parentheses?
+- How does a browser back button use a stack?
+
+## Active recall quiz
+
+<Quiz topicId="stacks" />
+
+<StudyNotes topicId="stacks" />
+
+<RelatedTopics topicIds={["queues","recursion","backtracking"]} />
