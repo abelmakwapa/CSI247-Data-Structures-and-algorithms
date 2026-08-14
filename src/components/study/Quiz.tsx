@@ -58,11 +58,12 @@ export function Quiz({ topicId }: { topicId: TopicId }) {
   useEffect(() => {
     const stored = readProgress().quizzes[topicId] ?? { ...EMPTY_QUIZ_PROGRESS };
     const next = quizWithOrder(stored, topic.quiz);
-    setProgress(next);
+    const hydrationTimer = window.setTimeout(() => setProgress(next), 0);
     if (next.order !== stored.order) {
       const current = readProgress();
       writeProgress({ ...current, quizzes: { ...current.quizzes, [topicId]: next } });
     }
+    return () => window.clearTimeout(hydrationTimer);
   }, [topicId, topic.quiz]);
 
   function update(next: QuizProgress) {
