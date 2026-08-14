@@ -22,11 +22,11 @@ export function StudyToolbar() {
   }
 
   return (
-    <div className="study-toolbar" aria-label="Study tools">
+    <div className="study-toolbar" role="group" aria-label="Study tools">
       <button type="button" className="toolbar-button" onClick={toggleFocus} aria-pressed={focus}>
         {focus ? 'Exit focus' : 'Focus mode'}
       </button>
-      <button type="button" className="toolbar-button" onClick={() => window.print()}>Print / PDF</button>
+      <button type="button" className="toolbar-button" onClick={() => window.print()} aria-label="Print or save this topic as a PDF">Print / PDF</button>
     </div>
   );
 }

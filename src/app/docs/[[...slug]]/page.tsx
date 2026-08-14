@@ -10,7 +10,7 @@ export default async function DocsPageRoute({ params }: { params: Promise<{ slug
   if (!page) notFound();
   const MDX = page.data.body;
 
-  return <DocsPage toc={page.data.toc} breadcrumb={{ enabled: false }}><DocsBody><MDX components={getMDXComponents()} /></DocsBody></DocsPage>;
+  return <DocsPage role="main" aria-label="Documentation content" toc={page.data.toc} breadcrumb={{ enabled: false }}><DocsBody id="main-content" tabIndex={-1}><MDX components={getMDXComponents()} /></DocsBody></DocsPage>;
 }
 
 export function generateStaticParams() {

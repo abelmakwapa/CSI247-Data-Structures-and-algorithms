@@ -65,7 +65,7 @@ export function ReviewSession() {
 
   return (
     <section id="review-session" className="review-session" aria-labelledby="review-session-title">
-      <div className="review-session-head"><div><p className="eyebrow">Structured review queue</p><h1 id="review-session-title">Review what needs retrieval.</h1><p>The queue prioritizes mistakes, review flags, low confidence, study recency, and bookmarks.</p></div><div className="review-queue-count" aria-label={`${queue.length} topics ready for review`}><strong>{queue.length}</strong><span>ready now</span></div></div>
+      <div className="review-session-head"><div><p className="eyebrow">Structured review queue</p><h1 id="review-session-title">Review what needs retrieval.</h1><p>The queue prioritizes mistakes, review flags, low confidence, study recency, and bookmarks.</p></div><div className="review-queue-count" role="status" aria-live="polite" aria-label={`${queue.length} topics ready for review`}><strong>{queue.length}</strong><span>ready now</span></div></div>
       <p className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</p>
       {current ? <div className="review-session-grid"><ReviewCard item={current} confidence={confidence} explanationVisible={explanationVisible} onConfidenceChange={(rating) => setConfidenceByTopic((ratings) => ({ ...ratings, [current.topic.id]: rating }))} onExplanationToggle={() => setExplanationTopic((id) => id === current.topic.id ? null : current.topic.id)} onAnswer={answer} /><QueuePreview queue={queue.slice(1, 5)} /></div> : <CompletionSummary reviewedCount={reviewedCount} history={currentProgress.reviewProgress.history} />}
       <ReviewHistory progress={currentProgress} />
@@ -81,7 +81,7 @@ function CompletionSummary({ reviewedCount, history }: { reviewedCount: number; 
   const latest = history.slice(0, reviewedCount);
   const known = latest.filter((entry) => entry.outcome === 'knew').length;
   const practice = latest.filter((entry) => entry.outcome === 'practice').length;
-  return <div className="review-complete" role="status"><span aria-hidden="true">✓</span><p className="eyebrow">Session complete</p><h2>Your review queue is clear.</h2><p>{reviewedCount ? `${reviewedCount} topics reviewed · ${known} known · ${practice} need more practice.` : 'Nothing is due right now. Your next scheduled topics will appear here automatically.'}</p></div>;
+  return <div className="review-complete" role="status" aria-live="polite"><span aria-hidden="true">✓</span><p className="eyebrow">Session complete</p><h2>Your review queue is clear.</h2><p>{reviewedCount ? `${reviewedCount} topics reviewed · ${known} known · ${practice} need more practice.` : 'Nothing is due right now. Your next scheduled topics will appear here automatically.'}</p></div>;
 }
 
 function ReviewHistory({ progress }: { progress: StudyProgress }) {

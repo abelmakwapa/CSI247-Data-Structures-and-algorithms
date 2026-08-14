@@ -35,7 +35,7 @@ export function TopicHero({ topicId, total }: { topicId: TopicId; total: number 
 
   return (
     <header className="topic-hero">
-      <div className="topic-breadcrumb"><Link href="/">Algo Atlas</Link><span>/</span><span>{topic.category}</span></div>
+      <nav className="topic-breadcrumb" aria-label="Breadcrumb"><Link href="/">Algo Atlas</Link><span aria-hidden="true">/</span><span>{topic.category}</span></nav>
       <div className="topic-hero-grid">
         <div>
           <p className="eyebrow">{topic.category} · visual field guide</p>
@@ -46,9 +46,11 @@ export function TopicHero({ topicId, total }: { topicId: TopicId; total: number 
           <ProgressTracker total={total} />
           <StudyToolbar />
           <div className="topic-actions">
-            <button type="button" className={`study-action${bookmarked ? ' is-active' : ''}`} onClick={() => update({ ...progress, bookmarks: toggleTopic(progress.bookmarks, topicId) })} aria-pressed={bookmarked}>{bookmarked ? '★ Bookmarked' : '☆ Bookmark'}</button>
-            <button type="button" className={`study-action${needsReview ? ' is-warning' : ''}`} onClick={() => update({ ...progress, review: toggleTopic(progress.review, topicId) })} aria-pressed={needsReview}>{needsReview ? '↺ In review' : '↺ Mark for review'}</button>
-            <button type="button" className={`study-action${understood ? ' is-success' : ''}`} onClick={() => update({ ...progress, understood: toggleTopic(progress.understood, topicId) })} aria-pressed={understood}>{understood ? '✓ Understood' : '○ Mark understood'}</button>
+            <div className="topic-actions" role="group" aria-label="Topic study status">
+              <button type="button" className={`study-action${bookmarked ? ' is-active' : ''}`} onClick={() => update({ ...progress, bookmarks: toggleTopic(progress.bookmarks, topicId) })} aria-pressed={bookmarked} aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark topic'}>{bookmarked ? '★ Bookmarked' : '☆ Bookmark'}</button>
+              <button type="button" className={`study-action${needsReview ? ' is-warning' : ''}`} onClick={() => update({ ...progress, review: toggleTopic(progress.review, topicId) })} aria-pressed={needsReview} aria-label={needsReview ? 'Remove topic from review' : 'Mark topic for review'}>{needsReview ? '↺ In review' : '↺ Mark for review'}</button>
+              <button type="button" className={`study-action${understood ? ' is-success' : ''}`} onClick={() => update({ ...progress, understood: toggleTopic(progress.understood, topicId) })} aria-pressed={understood} aria-label={understood ? 'Mark topic as not understood' : 'Mark topic as understood'}>{understood ? '✓ Understood' : '○ Mark understood'}</button>
+            </div>
           </div>
         </div>
       </div>

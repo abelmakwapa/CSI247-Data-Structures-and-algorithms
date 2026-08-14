@@ -23,13 +23,14 @@ export function ProgressTracker({ total, compact = false }: { total: number; com
   const percentage = total ? Math.round((count / total) * 100) : 0;
 
   return (
-    <div className={`progress-tracker${compact ? ' progress-tracker-compact' : ''}`} aria-label={`${count} of ${total} topics understood`}>
+    <div className={`progress-tracker${compact ? ' progress-tracker-compact' : ''}`} role="group" aria-label={`${count} of ${total} topics understood`}>
       <div className="progress-tracker-head">
         <span>{compact ? 'Progress' : 'Your study path'}</span>
         <strong>{percentage}%</strong>
       </div>
       <div className="progress-track" aria-hidden="true"><span style={{ width: `${percentage}%` }} /></div>
       {!compact && <div className="progress-tracker-copy">{count} / {total} topics understood</div>}
+      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{count} of {total} topics understood. {percentage}% complete.</p>
     </div>
   );
 }

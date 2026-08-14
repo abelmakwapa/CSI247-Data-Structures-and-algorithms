@@ -181,7 +181,8 @@ export function CodeExample({ topicId }: { topicId: TopicId }) {
           </select>
         </label>
         {fields.length > 0 && (
-          <div className="code-inputs" aria-label="Example inputs">
+          <fieldset className="code-inputs">
+            <legend>Example inputs</legend>
             {fields.map((field) => (
               <label key={field.id} className="code-input">
                 <span>{field.label}</span>
@@ -196,7 +197,7 @@ export function CodeExample({ topicId }: { topicId: TopicId }) {
                 />
               </label>
             ))}
-          </div>
+          </fieldset>
         )}
       </div>
 

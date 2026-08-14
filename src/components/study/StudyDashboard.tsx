@@ -119,7 +119,7 @@ export function StudyDashboard() {
 
 function DashboardProgress({ metrics }: { metrics: ReturnType<typeof getStudyMetrics> }) {
   return (
-    <div className="dashboard-progress-card" aria-label={`${metrics.understoodCount} of ${totalTopics} topics understood`}>
+    <div className="dashboard-progress-card" role="group" aria-label={`${metrics.understoodCount} of ${totalTopics} topics understood`}>
       <div className="dashboard-progress-topline">
         <span>Overall progress</span>
         <strong>{metrics.completionPercentage}%</strong>

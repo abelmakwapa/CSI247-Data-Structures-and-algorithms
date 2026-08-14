@@ -54,6 +54,7 @@ function quizWithOrder(progress: QuizProgress, questions: QuizQuestion[]): QuizP
 export function Quiz({ topicId }: { topicId: TopicId }) {
   const topic = getTopic(topicId);
   const [progress, setProgress] = useState<QuizProgress>(EMPTY_QUIZ_PROGRESS);
+  const [announcement, setAnnouncement] = useState('');
 
   useEffect(() => {
     const stored = readProgress().quizzes[topicId] ?? { ...EMPTY_QUIZ_PROGRESS };
@@ -82,10 +83,12 @@ export function Quiz({ topicId }: { topicId: TopicId }) {
       results: { ...progress.results, [question.id]: correct },
       drafts: withoutKey(progress.drafts, question.id),
     });
+    setAnnouncement(`${correct ? 'Correct.' : 'Not quite.'} Answer submitted for ${question.prompt}`);
   }
 
   function reveal(questionId: string) {
     update({ ...progress, revealed: progress.revealed.includes(questionId) ? progress.revealed : [...progress.revealed, questionId] });
+    setAnnouncement(`Answer revealed for ${topic.quiz.find((question) => question.id === questionId)?.prompt ?? 'question'}.`);
   }
 
   function retry(questionId: string) {
@@ -97,6 +100,7 @@ export function Quiz({ topicId }: { topicId: TopicId }) {
       results: withoutKey(progress.results, questionId),
       drafts: withoutKey(progress.drafts, questionId),
     });
+    setAnnouncement(`Question ${questionId} is ready to try again.`);
   }
 
   function saveDraft(questionId: string, value: string) {
@@ -109,7 +113,7 @@ export function Quiz({ topicId }: { topicId: TopicId }) {
   const correctCount = topic.quiz.filter((question) => progress.results[question.id] === true).length;
   const score = topic.quiz.length ? Math.round((correctCount / topic.quiz.length) * 100) : 0;
 
-  return <section className="academic-panel panel-theorem quiz-panel" aria-labelledby={`${topicId}-quiz-title`}><div className="quiz-head"><div><div className="panel-kicker">Active recall</div><h2 id={`${topicId}-quiz-title`}>Can you retrieve it without looking?</h2><p className="quiz-intro">Four ways to test the same idea. Questions shuffle once and your answers stay on this device.</p></div><div className="quiz-score" aria-live="polite"><strong>{score}%</strong><span>{correctCount} correct · {answeredCount} / {topic.quiz.length} answered</span></div></div><div className="quiz-progress" aria-hidden="true"><span style={{ width: `${(answeredCount / topic.quiz.length) * 100}%` }} /></div><div className="quiz-list" data-question-order={questions.map((question) => question.id).join(',')}>{questions.map((question, index) => <QuizQuestionCard key={question.id} question={question} number={index + 1} progress={progress} onDraftChange={saveDraft} onReveal={reveal} onRetry={retry} onSubmit={submit} />)}</div></section>;
+  return <section className="academic-panel panel-theorem quiz-panel" aria-labelledby={`${topicId}-quiz-title`}><div className="quiz-head"><div><div className="panel-kicker">Active recall</div><h2 id={`${topicId}-quiz-title`}>Can you retrieve it without looking?</h2><p className="quiz-intro">Four ways to test the same idea. Questions shuffle once and your answers stay on this device.</p></div><div className="quiz-score" aria-live="polite" aria-atomic="true"><strong>{score}%</strong><span>{correctCount} correct · {answeredCount} / {topic.quiz.length} answered</span></div></div><div className="quiz-progress" role="progressbar" aria-label="Quiz answer progress" aria-valuemin={0} aria-valuemax={topic.quiz.length} aria-valuenow={answeredCount} aria-valuetext={`${answeredCount} of ${topic.quiz.length} questions answered`}><span aria-hidden="true" style={{ width: `${(answeredCount / topic.quiz.length) * 100}%` }} /></div><p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p><div className="quiz-list" data-question-order={questions.map((question) => question.id).join(',')}>{questions.map((question, index) => <QuizQuestionCard key={question.id} question={question} number={index + 1} progress={progress} onDraftChange={saveDraft} onReveal={reveal} onRetry={retry} onSubmit={submit} />)}</div></section>;
 }
 
 interface QuizQuestionCardProps {

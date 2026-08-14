@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import { AccessibilityEnhancements } from '@/components/a11y/AccessibilityEnhancements';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -12,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="en" data-scroll-behavior="smooth"><body><RootProvider theme={{ enabled: false }}>{children}</RootProvider></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body><RootProvider theme={{ enabled: false }}><AccessibilityEnhancements />{children}</RootProvider></body></html>;
 }
