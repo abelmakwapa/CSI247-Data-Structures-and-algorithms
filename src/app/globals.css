@@ -295,8 +295,15 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
 .diagram-step-header span { color: #888; }
 .diagram-panel figcaption p { min-height: 44px; margin: 6px 0 10px; color: var(--muted); font-size: .85rem; }
 .diagram-controls { align-items: center; }
+.diagram-control-divider { width: 1px; height: 24px; margin: 0 2px; background: var(--line); }
 .step-dot { width: 12px; height: 12px; padding: 0 !important; border-radius: 50% !important; }
 .step-dot.active { background: var(--green); }
+.reduced-motion-note { color: var(--muted); font-family: var(--mono); font-size: .6rem; }
+.diagram-text-alternative { margin-top: 13px; padding-top: 11px; border-top: 1px solid var(--line); }
+.diagram-text-alternative summary { color: var(--blue); cursor: pointer; font-family: var(--mono); font-size: .66rem; }
+.diagram-text-alternative ol { margin: 10px 0 0; padding-left: 24px; }
+.diagram-text-alternative li { padding: 4px 0; color: var(--muted) !important; font-size: .74rem !important; }
+.diagram-text-alternative strong { color: var(--navy); }
 
 .operation-layout { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 18px; align-items: center; }
 .operation-buttons { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -396,6 +403,10 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
   .diagram-canvas { min-height: 225px; padding: 4px; }
   .diagram-canvas svg { min-width: 540px; }
   .diagram-canvas { overflow-x: auto; justify-items: start; }
+  .diagram-controls { align-items: stretch; }
+  .diagram-controls button:not(.step-dot) { flex: 1 1 calc(33% - 6px); }
+  .diagram-control-divider { display: none; }
+  .reduced-motion-note { flex-basis: 100%; }
   .code-panel-head { display: block; }
   .code-actions { justify-content: flex-start; margin-top: 10px; }
   .study-topic-card { grid-template-columns: 28px minmax(0, 1fr) 17px; }
@@ -407,6 +418,7 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
   html { scroll-behavior: auto; }
   .progress-track span, .dashboard-progress-track span, .operation-progress span { transition: none; }
   .atlas-dash { animation: none; }
+  .diagram-canvas svg * { transition: none !important; }
 }
 
 @media print {
