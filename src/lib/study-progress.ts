@@ -1,11 +1,17 @@
-import type { TopicId } from './topics';
+import { getTopic, type TopicId } from './topics';
+
+export type QuizAnswer = string | number | boolean;
 
 export interface QuizProgress {
-  answered: number[];
-  revealed: number[];
-  selected: Record<number, number>;
-  recallRatings: Record<number, 'got-it' | 'review'>;
+  order: string[];
+  answered: string[];
+  revealed: string[];
+  answers: Record<string, QuizAnswer>;
+  results: Record<string, boolean>;
+  drafts: Record<string, string>;
 }
+
+export const EMPTY_QUIZ_PROGRESS: QuizProgress = { order: [], answered: [], revealed: [], answers: {}, results: {}, drafts: {} };
 
 export type ConfidenceRating = 1 | 2 | 3 | 4 | 5;
 export type ReviewOutcome = 'knew' | 'practice' | 'skipped';
@@ -69,12 +75,66 @@ export function readProgress(): StudyProgress {
       review: Array.isArray(parsed.review) ? parsed.review.filter(isTopicId) : [],
       recentlyStudied: Array.isArray(parsed.recentlyStudied) ? parsed.recentlyStudied.filter(isTopicId).slice(0, RECENT_TOPIC_LIMIT) : [],
       notes: parsed.notes ?? {},
-      quizzes: parsed.quizzes ?? {},
+      quizzes: normalizeQuizzes(parsed.quizzes),
       reviewProgress: normalizeReviewProgress(parsed.reviewProgress),
     };
   } catch {
     return EMPTY_PROGRESS;
   }
+}
+
+function normalizeQuizzes(value: unknown): Partial<Record<TopicId, QuizProgress>> {
+  if (!value || typeof value !== 'object') return {};
+  return Object.fromEntries(Object.entries(value).map(([topicId, quiz]) => [topicId, normalizeQuizProgress(topicId, quiz)])) as Partial<Record<TopicId, QuizProgress>>;
+}
+
+function normalizeQuizProgress(topicId: string, value: unknown): QuizProgress {
+  let topic;
+  try {
+    topic = getTopic(topicId as TopicId);
+  } catch {
+    return { ...EMPTY_QUIZ_PROGRESS };
+  }
+  if (!value || typeof value !== 'object') return { ...EMPTY_QUIZ_PROGRESS };
+  const raw = value as Partial<QuizProgress> & { selected?: Record<string, number>; recallRatings?: Record<string, 'got-it' | 'review'> };
+  const questionId = (entry: unknown): string | null => {
+    if (typeof entry === 'number') return topic.quiz[entry]?.id ?? null;
+    if (typeof entry === 'string' && topic.quiz.some((question) => question.id === entry)) return entry;
+    return null;
+  };
+  const answers: Record<string, QuizAnswer> = isRecord(raw.answers) ? { ...raw.answers } as Record<string, QuizAnswer> : {};
+  const results: Record<string, boolean> = isRecord(raw.results) ? { ...raw.results } as Record<string, boolean> : {};
+  const drafts: Record<string, string> = isRecord(raw.drafts) ? Object.fromEntries(Object.entries(raw.drafts).filter((entry): entry is [string, string] => typeof entry[1] === 'string')) : {};
+  const answered = Array.isArray(raw.answered) ? raw.answered.map(questionId).filter((id): id is string => Boolean(id)) : [];
+  const revealed = Array.isArray(raw.revealed) ? raw.revealed.map(questionId).filter((id): id is string => Boolean(id)) : [];
+
+  if (isRecord(raw.selected)) {
+    Object.entries(raw.selected).forEach(([index, answer]) => {
+      const question = topic.quiz[Number(index)];
+      if (question?.kind === 'choice' && typeof answer === 'number') {
+        answers[question.id] = answer;
+        results[question.id] = answer === question.answer;
+      }
+    });
+  }
+  if (isRecord(raw.recallRatings)) {
+    Object.entries(raw.recallRatings).forEach(([index, rating]) => {
+      const question = topic.quiz[Number(index)];
+      if (question && (rating === 'got-it' || rating === 'review')) {
+        results[question.id] = rating === 'got-it';
+        if (!answered.includes(question.id)) answered.push(question.id);
+      }
+    });
+  }
+  Object.keys(answers).forEach((id) => {
+    if (typeof results[id] === 'boolean' && !answered.includes(id)) answered.push(id);
+  });
+  const order = Array.isArray(raw.order) ? raw.order.filter((id): id is string => typeof id === 'string' && topic.quiz.some((question) => question.id === id)) : [];
+  return { order: [...new Set(order)], answered: [...new Set(answered)], revealed: [...new Set(revealed)], answers, results, drafts };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
 function normalizeReviewProgress(value: unknown): ReviewProgress {

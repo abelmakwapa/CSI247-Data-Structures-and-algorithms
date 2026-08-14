@@ -42,8 +42,7 @@ function getReasons(topic: TopicMetadata, progress: StudyProgress): ReviewReason
 
 function hasIncorrectQuizAnswer(topic: TopicMetadata, progress: StudyProgress): boolean {
   const quiz = progress.quizzes[topic.id];
-  return topic.quiz.some((question, index) => question.kind === 'choice' && quiz?.answered.includes(index) && quiz.selected[index] !== question.answer)
-    || Object.values(quiz?.recallRatings ?? {}).includes('review');
+  return topic.quiz.some((question) => quiz?.answered.includes(question.id) && quiz.results[question.id] === false);
 }
 
 export function scheduleReview(outcome: ReviewOutcome, confidence: ConfidenceRating, from = new Date()): string {

@@ -22,6 +22,8 @@ export type TopicId =
   | 'dynamic-programming'
   | 'big-o';
 
+import { getTopicQuiz } from './quiz-data';
+
 export type TopicCategory = 'Data structures' | 'Algorithms';
 
 export type DiagramKind =
@@ -68,20 +70,41 @@ export interface CodeExamples {
 
 export interface ChoiceQuizQuestion {
   kind: 'choice';
+  id: string;
   prompt: string;
-  options: string[];
+  options: readonly string[];
   answer: number;
   explanation: string;
 }
 
-export interface RecallQuizQuestion {
-  kind: 'recall';
+export interface TrueFalseQuizQuestion {
+  kind: 'true-false';
+  id: string;
   prompt: string;
-  answer: string;
+  answer: boolean;
   explanation: string;
 }
 
-export type QuizQuestion = ChoiceQuizQuestion | RecallQuizQuestion;
+export interface ShortAnswerQuizQuestion {
+  kind: 'short-answer';
+  id: string;
+  prompt: string;
+  answer: string;
+  acceptedAnswers?: readonly string[];
+  explanation: string;
+}
+
+export interface OutputQuizQuestion {
+  kind: 'output';
+  id: string;
+  prompt: string;
+  code: string;
+  answer: string;
+  acceptedAnswers?: readonly string[];
+  explanation: string;
+}
+
+export type QuizQuestion = ChoiceQuizQuestion | TrueFalseQuizQuestion | ShortAnswerQuizQuestion | OutputQuizQuestion;
 
 export interface TopicMetadata {
   id: TopicId;
@@ -96,7 +119,9 @@ export interface TopicMetadata {
   related: TopicId[];
 }
 
-const topic = (value: TopicMetadata) => value;
+type TopicDefinition = Omit<TopicMetadata, 'quiz'> & { quiz?: unknown };
+
+const topic = (value: TopicDefinition): TopicMetadata => ({ ...value, quiz: getTopicQuiz(value.id) });
 
 export const topics: TopicMetadata[] = [
   topic({ id: 'arrays', title: 'Arrays', category: 'Data structures', description: "The fastest way to reach a known position — and a reminder that flexibility always has a price.", diagram: 'array', complexity: [{ operation: "Access", average: "O(1)", note: "One direct move. The input size does not change the number of steps." }, { operation: "Search", average: "O(n)" }, { operation: "Insert", average: "O(n)", note: "Everything after the gap shifts one slot to the right." }, { operation: "Delete", average: "O(n)", note: "The tail closes the gap by shifting left." }], operations: [{ label: "Access index", complexity: "O(1)", explanation: "One direct move. The input size does not change the number of steps.", visualStep: 1 }, { label: "Insert middle", complexity: "O(n)", explanation: "Everything after the gap shifts one slot to the right.", visualStep: 2 }, { label: "Delete middle", complexity: "O(n)", explanation: "The tail closes the gap by shifting left.", visualStep: 3 }], examples: { javascript: `const seats = [10, 20, 30, 40];\nconsole.log(seats[2]);\nseats.splice(1, 0, 15);`, python: `seats = [10, 20, 30, 40]\nprint(seats[2])\nseats.insert(1, 15)` }, quiz: [{ kind: 'choice', prompt: 'Why is array access by index usually constant time?', options: ['The address is calculated directly', 'The array scans every value', 'The array sorts itself'], answer: 0, explanation: 'Contiguous slots let the runtime calculate base + index × slot size.' }, { kind: 'recall', prompt: 'When does inserting into the middle become expensive?', answer: 'When later elements must shift to preserve order.', explanation: 'The shift touches the tail, so the work grows with n.' }], related: ['linked-lists', 'binary-search', 'sorting'] }),
@@ -134,4 +159,3 @@ export function getTopic(id: TopicId): TopicMetadata {
 export function topicUrl(id: TopicId): string {
   return `/docs/${getTopic(id).category === 'Algorithms' ? 'algorithms' : 'data-structures'}/${id}`;
 }
-
