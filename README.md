@@ -20,6 +20,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Offline support
+
+Production builds register the small service worker in `public/sw.js`. It keeps the home, review, and primary documentation shell available, caches visited MDX documents with a network-first strategy, and caches Next.js bundles, styles, fonts, and SVG assets for offline rendering. Routes that have not been visited show the accessible `public/offline.html` fallback.
+
+The service worker deliberately does not intercept `/api/search`, so Fumadocs search keeps its normal behavior. When the network is unavailable, the global offline indicator explains that cached content and local study state remain available. Study progress, bookmarks, notes, and quiz history continue to use the existing localStorage utilities and require no network connection.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

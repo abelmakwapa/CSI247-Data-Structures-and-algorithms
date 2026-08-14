@@ -31,6 +31,9 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .skip-link { position: fixed; top: 10px; left: 10px; z-index: 100; padding: 9px 13px; transform: translateY(-160%); border: 2px solid var(--navy); border-radius: 3px; color: #fff; background: var(--navy); font-family: var(--mono); font-size: .72rem; transition: transform .15s ease; }
 .skip-link:focus-visible { transform: translateY(0); outline-color: #fff; box-shadow: 0 0 0 3px #005fcc; }
+.offline-status { position: fixed; right: 14px; bottom: 14px; z-index: 40; display: inline-flex; align-items: center; gap: 7px; max-width: min(360px, calc(100vw - 28px)); padding: 7px 10px; border: 1px solid #9ac9af; border-radius: 3px; color: var(--green); background: rgba(237,255,245,.96); box-shadow: 0 4px 14px rgba(13,27,46,.12); font-family: var(--mono); font-size: .62rem; line-height: 1.35; }
+.offline-status.is-offline { border-color: #e6b0b0; color: var(--red); background: rgba(255,240,240,.97); }
+.offline-status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: currentColor; }
 .eyebrow, .panel-kicker, .dept-label, .topic-breadcrumb, .readout-label, .quiz-number { font-family: var(--mono); letter-spacing: .14em; text-transform: uppercase; }
 .eyebrow { margin: 0 0 10px; color: var(--muted); font-size: .72rem; }
 
@@ -473,7 +476,7 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
 }
 
 @media print {
-  .skip-link, .academic-nav, #nd-sidebar, #nd-toc, #nd-subnav, .study-toolbar, .topic-actions, .text-button, .diagram-controls, .code-actions, .related-topics { display: none !important; }
+  .skip-link, .offline-status, .academic-nav, #nd-sidebar, #nd-toc, #nd-subnav, .study-toolbar, .topic-actions, .text-button, .diagram-controls, .code-actions, .related-topics { display: none !important; }
   body, #nd-docs-layout, #nd-docs-layout main, #nd-docs-layout article { background: #fff !important; color: #111 !important; }
   #nd-docs-layout article { max-width: none; padding: 0; }
   .academic-panel { break-inside: avoid; box-shadow: none; }
