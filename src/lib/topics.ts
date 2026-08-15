@@ -51,15 +51,269 @@ export type DiagramKind =
   | 'dynamic-programming'
   | 'big-o';
 
+export type ComplexitySummary =
+  | ComplexityNotation
+  | 'O(1)*'
+  | 'O(log n)*'
+  | 'O(n)*'
+  | '~O(1)'
+  | 'O(depth)'
+  | 'blocked'
+  | 'count them'
+  | 'must prove'
+  | 'not safe*'
+  | 'per state'
+  | 'exponential'
+  | 'high'
+  | 'states × work'
+  | 'table or compressed';
+
 export interface ComplexityEntry {
   operation: string;
-  average: string;
+  average: ComplexitySummary;
   note?: string;
 }
 
-export type ComplexityClass = 'O(1)' | 'O(log n)' | 'O(n)' | 'O(n log n)' | 'O(n²)' | 'O(V + E)' | 'Other';
+export type ComplexityNotation =
+  | 'O(1)'
+  | 'O(log n)'
+  | 'O(n)'
+  | 'O(n log n)'
+  | 'O(n²)'
+  | 'O(2ⁿ)'
+  | 'O(V)'
+  | 'O(V + E)'
+  | 'O(k)'
+  | 'O(k + z)'
+  | 'O(z)'
+  | 'O(h)'
+  | 'O(d)'
+  | 'O(m)'
+  | 'O(n + m)'
+  | 'O(q log n)'
+  | 'O(states)'
+  | 'O(n · k)'
+  | 'O(α(n))'
+  | 'O(n α(n))'
+  | 'O(m α(n))'
+  | 'O(capacity)'
+  | 'O(states × work)'
+  | 'O(decisions)'
+  | 'Ω(n log n)'
+  | 'varies'
+  | 'depends'
+  | 'problem-dependent'
+  | 'not applicable'
+  | 'not supported'
+  | 'possible';
 
-export const complexityClasses: readonly ComplexityClass[] = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n²)', 'O(V + E)', 'Other'];
+export type ComplexityQualifier =
+  | 'amortized'
+  | 'expected'
+  | 'if balanced'
+  | 'with a known reference'
+  | 'output-sensitive'
+  | 'recursive'
+  | 'iterative'
+  | 'adjacency list'
+  | 'probabilistic'
+  | 'with pruning'
+  | 'implementation-dependent';
+
+export interface ComplexityMeasure {
+  value: ComplexityNotation;
+  qualifier?: ComplexityQualifier;
+}
+
+export interface ComplexityTableEntry {
+  operation: string;
+  best: ComplexityMeasure;
+  average: ComplexityMeasure;
+  worst: ComplexityMeasure;
+  space: ComplexityMeasure;
+  explanation: string;
+  amortized?: string;
+}
+
+export interface ComplexityScaleItem {
+  notation: Extract<ComplexityNotation, 'O(1)' | 'O(log n)' | 'O(n)' | 'O(n log n)' | 'O(n²)' | 'O(2ⁿ)'>;
+  label: string;
+  rank: 1 | 2 | 3 | 4 | 5 | 6;
+  explanation: string;
+}
+
+export type ComplexityClass = 'O(1)' | 'O(log n)' | 'O(n)' | 'O(n log n)' | 'O(n²)' | 'O(2ⁿ)' | 'O(V + E)' | 'Other';
+
+export const complexityClasses: readonly ComplexityClass[] = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n²)', 'O(2ⁿ)', 'O(V + E)', 'Other'];
+
+export const complexityScale: readonly ComplexityScaleItem[] = [
+  { notation: 'O(1)', label: 'Constant', rank: 1, explanation: 'Work stays the same as n grows.' },
+  { notation: 'O(log n)', label: 'Logarithmic', rank: 2, explanation: 'Work grows by shrinking the remaining search space.' },
+  { notation: 'O(n)', label: 'Linear', rank: 3, explanation: 'Work grows in direct proportion to n.' },
+  { notation: 'O(n log n)', label: 'Linearithmic', rank: 4, explanation: 'A logarithmic process repeats across n items.' },
+  { notation: 'O(n²)', label: 'Quadratic', rank: 5, explanation: 'Each item can trigger another pass over n items.' },
+  { notation: 'O(2ⁿ)', label: 'Exponential', rank: 6, explanation: 'Each new decision can double the search space.' },
+];
+
+type ComplexityMeasureInput = ComplexityNotation | ComplexityMeasure;
+
+const measure = (value: ComplexityMeasureInput, qualifier?: ComplexityQualifier): ComplexityMeasure =>
+  typeof value === 'string' ? { value, qualifier } : value;
+
+const complexityRow = (
+  operation: string,
+  best: ComplexityMeasureInput,
+  average: ComplexityMeasureInput,
+  worst: ComplexityMeasureInput,
+  space: ComplexityMeasureInput,
+  explanation: string,
+  amortized?: string,
+): ComplexityTableEntry => ({
+  operation,
+  best: measure(best),
+  average: measure(average),
+  worst: measure(worst),
+  space: measure(space),
+  explanation,
+  amortized,
+});
+
+export const complexityProfileByTopic: Record<TopicId, readonly ComplexityTableEntry[]> = {
+  arrays: [
+    complexityRow('Access by index', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'The index is converted directly into an address.'),
+    complexityRow('Search', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'An unsorted array may require checking every element.'),
+    complexityRow('Insert', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'Inserting before the end shifts the tail to open a slot.', 'Appending is O(1) amortized when capacity grows geometrically.'),
+    complexityRow('Delete', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'Deleting before the end shifts later elements left.'),
+  ],
+  'linked-lists': [
+    complexityRow('Access by index', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'Nodes must be followed from a known end one link at a time.'),
+    complexityRow('Search', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'Without an ordering shortcut, a value may be anywhere in the chain.'),
+    complexityRow('Insert with node reference', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Redirect the neighboring links once the insertion point is known.', 'Finding the reference can still cost O(n).'),
+    complexityRow('Delete with node reference', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Unlink the node by changing a constant number of pointers.', 'The bound assumes the predecessor or equivalent reference is already available.'),
+  ],
+  stacks: [
+    complexityRow('Push', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Place one item at the top.'),
+    complexityRow('Pop', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Remove the item at the top.'),
+    complexityRow('Peek', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Read the top without changing the stack.'),
+    complexityRow('Search', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'Inspecting an interior value requires passing the items above it.'),
+  ],
+  queues: [
+    complexityRow('Enqueue', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Attach an item at the rear pointer.'),
+    complexityRow('Dequeue', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Advance the front pointer to the next item.'),
+    complexityRow('Peek', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Read the front item without removing it.'),
+    complexityRow('Search', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'A queue exposes order, not a direct lookup path.'),
+  ],
+  deques: [
+    complexityRow('Push at either end', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'A deque keeps both boundary operations local.'),
+    complexityRow('Pop at either end', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Remove through the front or rear pointer.'),
+    complexityRow('Peek at either end', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Both boundary items are directly available.'),
+    complexityRow('Inspect middle', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'The middle still requires walking through the structure.'),
+  ],
+  'hash-maps': [
+    complexityRow('Get', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(1)', 'Hashing usually selects one bucket; collisions can form a scan.'),
+    complexityRow('Put', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(n)', 'Insert or update a bucket, possibly while resizing the table.', 'The expected O(1) bound is amortized across resizes.'),
+    complexityRow('Delete', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(1)', 'Find the key, then unlink its bucket entry.'),
+    complexityRow('Resize table', 'O(n)', 'O(n)', 'O(n)', 'O(n)', 'Rehash every stored key into a larger table.'),
+  ],
+  'hash-sets': [
+    complexityRow('Has', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(1)', 'Hash the candidate and inspect its expected bucket.'),
+    complexityRow('Add', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(n)', 'Insert only when the candidate is not already present.', 'The expected O(1) bound is amortized across resizes.'),
+    complexityRow('Delete', 'O(1)', { value: 'O(1)', qualifier: 'expected' }, 'O(n)', 'O(1)', 'Locate the bucket entry and unlink it.'),
+    complexityRow('Find first duplicate', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'A pass remembers each item and stops at the first repeat.'),
+  ],
+  trees: [
+    complexityRow('Find node', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'A plain tree has no ordering rule to eliminate branches.'),
+    complexityRow('Insert child', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'With the parent reference in hand, attach one child directly.', 'The bound assumes the parent reference is already known.'),
+    complexityRow('Depth-first traversal', 'O(n)', 'O(n)', 'O(n)', 'O(h)', 'A complete traversal visits each of n nodes once.'),
+    complexityRow('Compute height', 'O(1)', 'O(n)', 'O(n)', 'O(h)', 'Height is discovered by visiting the relevant subtree structure.'),
+  ],
+  'binary-search-trees': [
+    complexityRow('Search', 'O(1)', { value: 'O(log n)', qualifier: 'if balanced' }, 'O(n)', 'O(h)', 'Each comparison discards one subtree only when height stays small.'),
+    complexityRow('Insert', 'O(1)', { value: 'O(log n)', qualifier: 'if balanced' }, 'O(n)', 'O(h)', 'Follow the ordering path, then attach the new leaf.', 'Balancing maintenance can change the exact implementation cost.'),
+    complexityRow('Delete', 'O(1)', { value: 'O(log n)', qualifier: 'if balanced' }, 'O(n)', 'O(h)', 'Find the node and reconnect its successor or child.'),
+    complexityRow('In-order traversal', 'O(n)', 'O(n)', 'O(n)', 'O(h)', 'Visit left, node, and right to emit all n keys in order.'),
+  ],
+  heaps: [
+    complexityRow('Peek top', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'The root always stores the highest-priority item.'),
+    complexityRow('Push', 'O(1)', 'O(log n)', 'O(log n)', 'O(1)', 'Bubble the new leaf upward until heap order is restored.'),
+    complexityRow('Pop top', 'O(1)', 'O(log n)', 'O(log n)', 'O(1)', 'Move the last leaf to the root, then sink it down.'),
+    complexityRow('Build heap', 'O(n)', 'O(n)', 'O(n)', 'O(1)', 'Bottom-up heap construction reuses work between levels.'),
+  ],
+  graphs: [
+    complexityRow('Add edge', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Append the neighbor in an adjacency list.', 'The representation determines the constant factors; adjacency lists keep the update local.'),
+    complexityRow('BFS / DFS', 'O(V + E)', 'O(V + E)', 'O(V + E)', 'O(V)', 'Each reachable vertex and each incident edge is examined at most once.'),
+    complexityRow('Edge lookup', 'O(1)', 'O(1)', 'O(V)', 'O(1)', 'A matrix or hashed neighbors give direct lookup; a list may scan a vertex degree.'),
+    complexityRow('Shortest path', 'O(1)', 'varies', 'varies', 'O(V)', 'Weights, negative edges, and the chosen algorithm determine the bound.'),
+  ],
+  tries: [
+    complexityRow('Insert word', 'O(k)', 'O(k)', 'O(k)', 'O(k)', 'Follow or create one edge per character.'),
+    complexityRow('Find word', 'O(k)', 'O(k)', 'O(k)', 'O(1)', 'The search follows at most one path of key length k.'),
+    complexityRow('Prefix query', 'O(k)', 'O(k + z)', 'O(k + z)', 'O(z)', 'Reach the prefix in k steps, then emit z matching completions.', 'The output-sensitive term z counts returned words.'),
+    complexityRow('Store dictionary', 'O(k)', 'O(n · k)', 'O(n · k)', 'O(n · k)', 'A trie stores shared prefixes, but each character can still create a node.'),
+  ],
+  'disjoint-set-union': [
+    complexityRow('Find representative', 'O(1)', { value: 'O(α(n))', qualifier: 'amortized' }, 'O(α(n))', 'O(1)', 'Path compression flattens parent links used by the query.', 'With union by rank or size, a sequence of operations is nearly constant amortized.'),
+    complexityRow('Union components', 'O(1)', { value: 'O(α(n))', qualifier: 'amortized' }, 'O(α(n))', 'O(1)', 'Find two representatives, then attach one root under the other.', 'The inverse-Ackermann factor applies across the operation sequence.'),
+    complexityRow('Make set', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Initialize one parent and one rank or size value.'),
+    complexityRow('Process m unions/finds', 'O(m)', 'O(m α(n))', 'O(m α(n))', 'O(n)', 'The near-linear sequence bound captures the cost of repeated connectivity checks.'),
+  ],
+  'bloom-filters': [
+    complexityRow('Add', 'O(k)', 'O(k)', 'O(k)', 'O(1)', 'Set k hash-derived bits in the filter.'),
+    complexityRow('Check membership', 'O(k)', 'O(k)', 'O(k)', 'O(1)', 'One zero bit proves absence; all set bits mean “maybe present.”'),
+    complexityRow('False-positive outcome', 'possible', 'possible', 'possible', 'O(1)', 'The filter can report a present item that was never inserted.', 'False positives are probabilistic; false negatives are not expected in a standard filter.'),
+    complexityRow('Delete', 'not supported', 'not supported', 'not supported', 'O(1)', 'A standard Bloom filter cannot tell which item set a bit; use a counting variant for deletion.'),
+  ],
+  'lru-cache': [
+    complexityRow('Get', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Map lookup finds the node, then the list moves it to the front.'),
+    complexityRow('Put', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Insert or update, move to the front, and evict the tail if full.'),
+    complexityRow('Evict least recent', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'The linked-list tail is always the least recently used node.'),
+    complexityRow('Cache storage', 'O(capacity)', 'O(capacity)', 'O(capacity)', 'O(capacity)', 'The map and recency list retain at most capacity entries.'),
+  ],
+  sorting: [
+    complexityRow('Merge sort', 'O(n log n)', 'O(n log n)', 'O(n log n)', 'O(n)', 'Divide the input, then merge sorted halves in linear work per level.'),
+    complexityRow('Quicksort', 'O(n log n)', 'O(n log n)', 'O(n²)', 'O(h)', 'Good pivots keep partitions balanced; repeated bad pivots form a chain.'),
+    complexityRow('Insertion sort', 'O(n)', 'O(n²)', 'O(n²)', 'O(1)', 'A nearly sorted prefix makes each insertion cheap.'),
+    complexityRow('Comparison lower bound', 'Ω(n log n)', 'Ω(n log n)', 'Ω(n log n)', 'O(1)', 'Any comparison sort needs at least this many comparisons in the general case.'),
+  ],
+  'binary-search': [
+    complexityRow('Search', 'O(1)', 'O(log n)', 'O(log n)', 'O(1)', 'Each comparison discards roughly half of an ordered search interval.', 'The iterative form keeps auxiliary space constant.'),
+    complexityRow('Check midpoint', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Compute one midpoint and compare one value.'),
+    complexityRow('Pre-sort input', 'O(n log n)', 'O(n log n)', 'O(n log n)', 'O(n)', 'Binary search only pays off after the input is ordered.'),
+    complexityRow('Search repeated queries', 'O(log n)', 'O(q log n)', 'O(q log n)', 'O(1)', 'Run the logarithmic query q times after ordering is available.'),
+  ],
+  recursion: [
+    complexityRow('Linear recursion', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'One smaller call waits on the stack at each depth.', 'The stack-space term is the recursion depth, even when each call is constant work.'),
+    complexityRow('Binary recursion', 'O(1)', 'O(2ⁿ)', 'O(2ⁿ)', 'O(n)', 'Two recursive branches can repeat the same subproblems exponentially.'),
+    complexityRow('Memoized recurrence', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'Store each state once so repeated calls become table lookups.'),
+    complexityRow('One call frame', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Creating or returning from one frame is constant work.'),
+  ],
+  backtracking: [
+    complexityRow('Choose / undo', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Add or remove one candidate from the current partial solution.'),
+    complexityRow('Enumerate subsets', 'O(1)', 'O(2ⁿ)', 'O(2ⁿ)', 'O(n)', 'Each item creates an include/exclude branch in the decision tree.'),
+    complexityRow('Pruned search', 'O(1)', 'problem-dependent', 'O(2ⁿ)', 'O(n)', 'A valid bound can cut branches, but worst-case exploration may remain exponential.', 'The benefit of pruning depends on the constraints and input distribution.'),
+    complexityRow('Decision depth', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'The current path stores at most one decision per input item.'),
+  ],
+  'greedy-algorithms': [
+    complexityRow('Sort choices', 'O(n log n)', 'O(n log n)', 'O(n log n)', 'O(1)', 'Order candidates by the key that supports the greedy choice.'),
+    complexityRow('Scan choices', 'O(n)', 'O(n)', 'O(n)', 'O(1)', 'Inspect each candidate once after the ordering is ready.'),
+    complexityRow('Take safe choice', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Commit to the next feasible candidate after the proof condition holds.'),
+    complexityRow('Greedy workspace', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'Input copying, sorting, or selected-output storage determines extra space.'),
+  ],
+  'dynamic-programming': [
+    complexityRow('State transition', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'Read previously computed state and combine a fixed number of values.'),
+    complexityRow('Fill table', 'O(n)', 'O(states × work)', 'O(states × work)', 'O(states)', 'Compute each state once, then pay the transition cost for that state.'),
+    complexityRow('Memoized recursion', 'O(1)', 'O(states × work)', 'O(states × work)', 'O(states)', 'Caching prevents the same state from expanding repeatedly.'),
+    complexityRow('Space-compressed DP', 'O(1)', 'O(states)', 'O(states)', 'O(n)', 'Keep only the dependency frontier when the full table is unnecessary.'),
+  ],
+  'big-o': [
+    complexityRow('O(1) constant', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'The amount of work does not depend on n.'),
+    complexityRow('O(log n) logarithmic', 'O(log n)', 'O(log n)', 'O(log n)', 'O(1)', 'A constant fraction of the remaining input disappears each step.'),
+    complexityRow('O(n) linear', 'O(n)', 'O(n)', 'O(n)', 'O(1)', 'A single pass scales directly with the number of items.'),
+    complexityRow('O(n log n) linearithmic', 'O(n log n)', 'O(n log n)', 'O(n log n)', 'O(n)', 'Divide-and-conquer or ordered processing combines n work with log n levels.'),
+    complexityRow('O(n²) quadratic', 'O(n²)', 'O(n²)', 'O(n²)', 'O(1)', 'Nested passes can compare each item with many other items.'),
+    complexityRow('O(2ⁿ) exponential', 'O(2ⁿ)', 'O(2ⁿ)', 'O(2ⁿ)', 'O(n)', 'Binary choices can double the number of branches at every input step.'),
+  ],
+};
 
 export interface OperationLabStep {
   label: string;
@@ -119,15 +373,21 @@ export interface TopicMetadata {
   description: string;
   diagram: DiagramKind;
   complexity: ComplexityEntry[];
+  complexityProfile: readonly ComplexityTableEntry[];
   operations: OperationLabStep[];
   examples: CodeExamples;
   quiz: QuizQuestion[];
   related: TopicId[];
 }
 
-type TopicDefinition = Omit<TopicMetadata, 'quiz' | 'difficulty'> & { quiz?: unknown };
+type TopicDefinition = Omit<TopicMetadata, 'quiz' | 'difficulty' | 'complexityProfile'> & { quiz?: unknown };
 
-const topic = (value: TopicDefinition): TopicMetadata => ({ ...value, difficulty: topicTaxonomy[value.id].difficulty, quiz: getTopicQuiz(value.id) });
+const topic = (value: TopicDefinition): TopicMetadata => ({
+  ...value,
+  complexityProfile: complexityProfileByTopic[value.id],
+  difficulty: topicTaxonomy[value.id].difficulty,
+  quiz: getTopicQuiz(value.id),
+});
 
 export const topics: TopicMetadata[] = [
   topic({ id: 'arrays', title: 'Arrays', category: 'Data structures', description: "The fastest way to reach a known position — and a reminder that flexibility always has a price.", diagram: 'array', complexity: [{ operation: "Access", average: "O(1)", note: "One direct move. The input size does not change the number of steps." }, { operation: "Search", average: "O(n)" }, { operation: "Insert", average: "O(n)", note: "Everything after the gap shifts one slot to the right." }, { operation: "Delete", average: "O(n)", note: "The tail closes the gap by shifting left." }], operations: [{ label: "Access index", complexity: "O(1)", explanation: "One direct move. The input size does not change the number of steps.", visualStep: 1 }, { label: "Insert middle", complexity: "O(n)", explanation: "Everything after the gap shifts one slot to the right.", visualStep: 2 }, { label: "Delete middle", complexity: "O(n)", explanation: "The tail closes the gap by shifting left.", visualStep: 3 }], examples: { javascript: `const seats = [10, 20, 30, 40];\nconsole.log(seats[2]);\nseats.splice(1, 0, 15);`, python: `seats = [10, 20, 30, 40]\nprint(seats[2])\nseats.insert(1, 15)` }, quiz: [{ kind: 'choice', prompt: 'Why is array access by index usually constant time?', options: ['The address is calculated directly', 'The array scans every value', 'The array sorts itself'], answer: 0, explanation: 'Contiguous slots let the runtime calculate base + index × slot size.' }, { kind: 'recall', prompt: 'When does inserting into the middle become expensive?', answer: 'When later elements must shift to preserve order.', explanation: 'The shift touches the tail, so the work grows with n.' }], related: ['linked-lists', 'binary-search', 'sorting'] }),
@@ -159,11 +419,17 @@ export const topicMap = new Map(topics.map((item) => [item.id, item]));
 export function getComplexityClasses(topic: TopicMetadata): ComplexityClass[] {
   const found = new Set<ComplexityClass>();
 
-  topic.complexity.forEach(({ average }) => {
+  const averages = [
+    ...topic.complexity.map(({ average }) => average),
+    ...topic.complexityProfile.map(({ average }) => average.value),
+  ];
+
+  averages.forEach((average) => {
     const normalized = average.replaceAll('~', '');
     if (normalized.includes('O(n log n)')) found.add('O(n log n)');
     else if (normalized.includes('O(log n)')) found.add('O(log n)');
     else if (normalized.includes('O(n²)') || normalized.includes('O(n^2)')) found.add('O(n²)');
+    else if (normalized.includes('O(2ⁿ)') || normalized.includes('O(2^n)')) found.add('O(2ⁿ)');
     else if (normalized.includes('O(V + E)')) found.add('O(V + E)');
     else if (normalized.includes('O(n)')) found.add('O(n)');
     else if (normalized.includes('O(1)')) found.add('O(1)');

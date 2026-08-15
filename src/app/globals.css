@@ -355,13 +355,43 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
 .operation-progress { height: 5px; margin-top: 12px; border-radius: 99px; background: #dbe4f0; }
 .operation-progress span { display: block; height: 100%; border-radius: inherit; background: var(--green); transition: width .25s ease; }
 
+.complexity-panel { overflow: hidden; }
+.complexity-panel-heading { display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+.complexity-panel-heading h2 { margin-bottom: 0 !important; }
+.complexity-panel-tag { flex: 0 0 auto; margin-top: 4px; padding: 4px 6px; border: 1px solid #b9c6da; color: var(--muted); font-family: var(--mono); font-size: .58rem; letter-spacing: .05em; text-transform: uppercase; }
+.complexity-scale { margin: 18px 0 20px; padding: 13px 14px 12px; border: 1px solid #c8d4e8; background: rgba(255,255,255,.62); }
+.complexity-scale-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; color: var(--navy); font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+.complexity-scale-heading small { color: var(--muted); font-size: .58rem; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.complexity-scale-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 18px; margin: 12px 0 0; padding: 0; list-style: none; }
+.complexity-scale-item { min-width: 0; }
+.complexity-scale-label { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.complexity-scale-label code { color: var(--green); font-family: var(--mono); font-size: .75rem; font-weight: 700; }
+.complexity-scale-label span { color: var(--muted); font-family: var(--mono); font-size: .61rem; }
+.complexity-scale-track { display: block; height: 6px; margin: 5px 0 4px; overflow: hidden; border-radius: 99px; background: #dbe4f0; }
+.complexity-scale-bar { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--green)); }
+.complexity-scale-track--1 .complexity-scale-bar { width: 16%; }
+.complexity-scale-track--2 .complexity-scale-bar { width: 32%; }
+.complexity-scale-track--3 .complexity-scale-bar { width: 48%; }
+.complexity-scale-track--4 .complexity-scale-bar { width: 64%; }
+.complexity-scale-track--5 .complexity-scale-bar { width: 82%; }
+.complexity-scale-track--6 .complexity-scale-bar { width: 100%; }
+.complexity-scale-item small { display: block; color: var(--muted); font-size: .66rem; line-height: 1.35; }
+.complexity-scale-alternative { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.complexity-scale-alternative summary { color: var(--blue); cursor: pointer; font-family: var(--mono); font-size: .63rem; }
+.complexity-scale-alternative p { margin: 7px 0 0; color: var(--muted); font-size: .72rem; line-height: 1.45; }
+.complexity-table-note { display: flex; align-items: baseline; gap: 9px; margin: 0 0 8px; color: var(--muted); font-size: .68rem; }
+.complexity-table-note span { color: var(--blue); font-family: var(--mono); font-size: .62rem; text-transform: uppercase; }
+.complexity-table-note p { margin: 0; }
 .table-wrap { overflow-x: auto; }
-.complexity-table { width: 100%; border-collapse: collapse; }
+.complexity-table { width: 100%; min-width: 850px; border-collapse: collapse; }
 .complexity-table th, .complexity-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.complexity-table thead th { color: #748094; font-family: var(--mono); font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; }
-.complexity-table tbody th { color: var(--navy); font-size: .78rem; }
-.complexity-table td { color: var(--muted); font-size: .78rem; }
-.complexity-table td code { color: var(--green); font-family: var(--mono); font-size: .8rem; font-weight: 700; }
+.complexity-table thead th { color: #748094; font-family: var(--mono); font-size: .61rem; letter-spacing: .08em; text-transform: uppercase; }
+.complexity-table tbody th { min-width: 116px; color: var(--navy); font-size: .76rem; }
+.complexity-table td { color: var(--muted); font-size: .73rem; line-height: 1.4; }
+.complexity-table td code { color: var(--green); font-family: var(--mono); font-size: .76rem; font-weight: 700; }
+.complexity-measure { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.complexity-measure small { color: var(--muted); font-family: var(--mono); font-size: .57rem; line-height: 1.2; }
+.complexity-no-note { color: #9aa6b6; }
 
 .code-panel { padding-bottom: 0; overflow: hidden; background: #fff; }
 .code-panel-head { align-items: start; }
@@ -487,6 +517,21 @@ kbd { padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; font
   .topic-grid { grid-template-columns: 1fr; }
   #nd-docs-layout article { padding: 20px 14px 54px; }
   .academic-panel { padding: 16px; }
+  .complexity-panel-heading { display: block; }
+  .complexity-panel-tag { display: inline-block; margin-top: 10px; }
+  .complexity-scale { margin-right: -2px; margin-left: -2px; padding-right: 11px; padding-left: 11px; }
+  .complexity-scale-heading { display: block; }
+  .complexity-scale-heading small { display: block; margin-top: 4px; }
+  .complexity-scale-list { grid-template-columns: 1fr; gap: 10px; }
+  .complexity-table-note { display: block; }
+  .complexity-table-note p { margin-top: 4px; }
+  .complexity-table { min-width: 0; display: block; }
+  .complexity-table thead { display: none; }
+  .complexity-table tbody, .complexity-table tr, .complexity-table th, .complexity-table td { display: block; }
+  .complexity-table tbody tr { padding: 7px 0 9px; border-bottom: 1px solid var(--line); }
+  .complexity-table tbody th { min-width: 0; padding: 4px 0 6px; border-bottom: 0; font-size: .8rem; }
+  .complexity-table tbody td { display: grid; grid-template-columns: minmax(92px, 31%) minmax(0, 1fr); gap: 8px; padding: 4px 0; border-bottom: 0; }
+  .complexity-table tbody td::before { content: attr(data-label); color: #748094; font-family: var(--mono); font-size: .59rem; letter-spacing: .05em; text-transform: uppercase; }
   .code-panel pre { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
   .code-output { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
   .diagram-canvas { min-height: 225px; padding: 4px; }
