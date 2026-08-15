@@ -23,6 +23,7 @@ export type TopicId =
   | 'big-o';
 
 import { getTopicQuiz } from './quiz-data';
+import { topicTaxonomy, type TopicDifficulty } from './topic-taxonomy';
 
 export type TopicCategory = 'Data structures' | 'Algorithms';
 
@@ -55,6 +56,10 @@ export interface ComplexityEntry {
   average: string;
   note?: string;
 }
+
+export type ComplexityClass = 'O(1)' | 'O(log n)' | 'O(n)' | 'O(n log n)' | 'O(n²)' | 'O(V + E)' | 'Other';
+
+export const complexityClasses: readonly ComplexityClass[] = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n²)', 'O(V + E)', 'Other'];
 
 export interface OperationLabStep {
   label: string;
@@ -110,6 +115,7 @@ export interface TopicMetadata {
   id: TopicId;
   title: string;
   category: TopicCategory;
+  difficulty: TopicDifficulty;
   description: string;
   diagram: DiagramKind;
   complexity: ComplexityEntry[];
@@ -119,9 +125,9 @@ export interface TopicMetadata {
   related: TopicId[];
 }
 
-type TopicDefinition = Omit<TopicMetadata, 'quiz'> & { quiz?: unknown };
+type TopicDefinition = Omit<TopicMetadata, 'quiz' | 'difficulty'> & { quiz?: unknown };
 
-const topic = (value: TopicDefinition): TopicMetadata => ({ ...value, quiz: getTopicQuiz(value.id) });
+const topic = (value: TopicDefinition): TopicMetadata => ({ ...value, difficulty: topicTaxonomy[value.id].difficulty, quiz: getTopicQuiz(value.id) });
 
 export const topics: TopicMetadata[] = [
   topic({ id: 'arrays', title: 'Arrays', category: 'Data structures', description: "The fastest way to reach a known position — and a reminder that flexibility always has a price.", diagram: 'array', complexity: [{ operation: "Access", average: "O(1)", note: "One direct move. The input size does not change the number of steps." }, { operation: "Search", average: "O(n)" }, { operation: "Insert", average: "O(n)", note: "Everything after the gap shifts one slot to the right." }, { operation: "Delete", average: "O(n)", note: "The tail closes the gap by shifting left." }], operations: [{ label: "Access index", complexity: "O(1)", explanation: "One direct move. The input size does not change the number of steps.", visualStep: 1 }, { label: "Insert middle", complexity: "O(n)", explanation: "Everything after the gap shifts one slot to the right.", visualStep: 2 }, { label: "Delete middle", complexity: "O(n)", explanation: "The tail closes the gap by shifting left.", visualStep: 3 }], examples: { javascript: `const seats = [10, 20, 30, 40];\nconsole.log(seats[2]);\nseats.splice(1, 0, 15);`, python: `seats = [10, 20, 30, 40]\nprint(seats[2])\nseats.insert(1, 15)` }, quiz: [{ kind: 'choice', prompt: 'Why is array access by index usually constant time?', options: ['The address is calculated directly', 'The array scans every value', 'The array sorts itself'], answer: 0, explanation: 'Contiguous slots let the runtime calculate base + index × slot size.' }, { kind: 'recall', prompt: 'When does inserting into the middle become expensive?', answer: 'When later elements must shift to preserve order.', explanation: 'The shift touches the tail, so the work grows with n.' }], related: ['linked-lists', 'binary-search', 'sorting'] }),
@@ -149,6 +155,23 @@ export const topics: TopicMetadata[] = [
 ];
 
 export const topicMap = new Map(topics.map((item) => [item.id, item]));
+
+export function getComplexityClasses(topic: TopicMetadata): ComplexityClass[] {
+  const found = new Set<ComplexityClass>();
+
+  topic.complexity.forEach(({ average }) => {
+    const normalized = average.replaceAll('~', '');
+    if (normalized.includes('O(n log n)')) found.add('O(n log n)');
+    else if (normalized.includes('O(log n)')) found.add('O(log n)');
+    else if (normalized.includes('O(n²)') || normalized.includes('O(n^2)')) found.add('O(n²)');
+    else if (normalized.includes('O(V + E)')) found.add('O(V + E)');
+    else if (normalized.includes('O(n)')) found.add('O(n)');
+    else if (normalized.includes('O(1)')) found.add('O(1)');
+    else found.add('Other');
+  });
+
+  return complexityClasses.filter((complexityClass) => found.has(complexityClass));
+}
 
 export function getTopic(id: TopicId): TopicMetadata {
   const value = topicMap.get(id);
